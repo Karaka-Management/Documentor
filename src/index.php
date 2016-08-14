@@ -1,6 +1,7 @@
 <?php
 //<editor-fold desc="Require/Include">
-require_once __DIR__ . '/../phpOMS/Autoloader.php';
+
+require_once __DIR__ . '/Application/Autoloader.php';
 //</editor-fold>
 
-$App = new \Documentor\Application($argv);
+$App = new Documentor\src\Application\Application($argv);

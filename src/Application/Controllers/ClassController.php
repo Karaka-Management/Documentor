@@ -2,13 +2,20 @@
 
 namespace Documentor\src\Application\Controllers;
 
-class ClassController 
+use Documentor\src\Application\Models\Comment;
+use Documentor\src\Application\Views\ClassView;
+use Documentor\src\Application\Views\DocView;
+use phpOMS\System\File\Directory;
+use phpOMS\System\File\File;
+use phpOMS\Views\ViewAbstract;
+
+class ClassController
 {
 	private $destination = '';
 	private $codeCoverage = null;
 	private $unitTest = null;
 
-	public function __construct(string $destination, CodeCoverageController $codeCoverage, UnitTestCoverage $unitTest)
+	public function __construct(string $destination, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
 	{
 		$this->destination = $destination;
 		$this->codeCoverage = $codeCoverage;
@@ -24,31 +31,24 @@ class ClassController
 		}
 	}
 
-	private function parseClass(string $path) : ClassView
+	private function parseClass(string $path) : DocView
 	{
 		$classView = new ClassView();
-
 		try {
-			include $path;
+			include_once $path;
 
 			$className = substr($path, strlen(realpath(__DIR__ . '/../../../../')), -4);
 			$className = str_replace('/', '\\', $className);
 			$class = new \ReflectionClass($className);
-			$outPath = $this->destination . '/' . str_replace('\\', '/', $class->getName);
+			$outPath = $this->destination . '/' . str_replace('\\', '/', $class->getName());
 			$classView->setPath($outPath . '.html');
-
-			if($class->isInterface()) {
-				$classView->setTemplate('/Documentor/src/Theme/interface');
-			} elseif($class->isTrait()) {
-				$classView->setTemplate('/Documentor/src/Theme/trait');
-			} else {
-				$classView->setTemplate('/Documentor/src/Theme/class');
-			}
+			$classView->setBase($this->destination);
+			$classView->setTemplate('/Documentor/src/Theme/class');
 
 			$classView->setReflection($class);
 			$classView->setComment(new Comment($class->getDocComment()));
-			$classView->setTest($this->unitTest->getClass($method->getName()));
-			$classView->setCoverage($this->codeCoverage->getClass($method->getName()));
+			$classView->setTest($this->unitTest->getClass($class->getName()));
+			$classView->setCoverage($this->codeCoverage->getClass($class->getName()));
 
 			$methods = $class->getMethods();
 			foreach($methods as $method) {
@@ -56,6 +56,10 @@ class ClassController
 			}
 		} catch(\Exception $e) {
 			echo $e->getMessage();
+			echo $e->getFile();
+		} catch(\Throwable $e) {
+			echo $e->getMessage();
+			echo $e->getFile();
 		} finally {
 			return $classView;
 		}
@@ -63,10 +67,10 @@ class ClassController
 
 	private function parseMethod(\ReflectionMethod $method, string $destination) 
 	{
-		$methodView = new MethodView();
+		$methodView = new DocView();
 		$methodView->setTemplate('/Documentor/src/Theme/method');
 		$methodView->setReflection($method);
-		$methodView->setComments(new Comment($method->getDocComment()));
+		$methodView->setComment(new Comment($method->getDocComment()));
 		$methodView->setPath($destination);
 		$methodView->setTest($this->unitTest->getMethod($method->getName()));
 		$methodView->setCoverage($this->codeCoverage->getMethod($method->getName()));
@@ -74,8 +78,9 @@ class ClassController
 		$this->outputRender($methodView);
 	}
 
-	private function outputRender(View $view)
+	private function outputRender(ViewAbstract $view)
 	{
+		Directory::createPath(dirname($view->getPath()), '0777', true);
 		file_put_contents($view->getPath(), $view->render());
 	}
 }
