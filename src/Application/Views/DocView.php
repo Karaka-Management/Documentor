@@ -78,4 +78,16 @@ class DocView extends ViewAbstract
     {
         return '<span class="variable">$' . $var . '</span>';
     }
+
+    protected function linkType(string $type, string $output = null) : string
+    {
+        if($type === 'string' || $type === 'int' || $type === 'float' || $type === 'bool' || $type === 'array' || $type === 'Closure' ) {
+            return $this->formatType($type);
+        } elseif(strpos($type, '&') !== false || strpos($type, '[') !== false | strpos($type, '<') !== false) {
+            return $this->formatType(htmlspecialchars($output ?? $type));
+        } else {
+            $text = explode('\\', $type);
+            return '<a href="' . $this->base . '/' . $type . '.html">' .  $this->formatType((isset($output) ? $output : end($text))) . '</a>';
+        }
+    }
 }

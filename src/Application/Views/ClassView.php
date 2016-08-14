@@ -13,7 +13,7 @@ class ClassView extends DocView
         $type     = $this->ref->isInterface() ? 'interface ' : 'class ';
         $type     = $this->ref->isTrait() ? 'trait ' : $type;
         $name     = $this->ref->getShortName() . ' ';
-        $extends  = $this->ref->getExtensionName() !== false ? 'extends ' . $this->linkType($this->ref->getExtension()->getName()) . ' ' : '';
+        $extends  = $this->ref->getParentClass() !== false ? 'extends ' . $this->linkType($this->ref->getParentClass()->getName()) . ' ' : '';
 
         $interfaces = $this->ref->getInterfaces();
         $implements = '';
@@ -58,18 +58,6 @@ class ClassView extends DocView
             . ($method->hasReturnType() ? ' : ' . $this->linkType($method->getReturnType()) : '');
 
             yield $methodString;
-        }
-    }
-
-    private function linkType(string $type, string $output = null) : string
-    {
-        if($type === 'string' || $type === 'int' || $type === 'bool' || $type === 'array' || $type === 'Closure' ) {
-            return $this->formatType($type);
-        } elseif(strpos($type, '&') !== false || strpos($type, '[') !== false | strpos($type, '<') !== false) {
-            return $this->formatType(htmlspecialchars($output ?? $type));
-        } else {
-            $text = explode('\\', $type);
-            return '<a href="' . $this->base . '/' . $type . '.html">' .  $this->formatType((isset($output) ? $output : end($text))) . '</a>';
         }
     }
 

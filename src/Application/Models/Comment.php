@@ -20,6 +20,7 @@ class Comment
     private $throws = '';
     private $return = '';
     private $title = '';
+    private $latex = '';
 
     public function __construct(string $comment)
     {
@@ -42,7 +43,10 @@ class Comment
         $this->param      = $this->findKey('@param', $comment);
         $this->throws     = $this->findKey('@throws', $comment);
         $this->return     = $this->findKey('@return', $comment);
-        $this->version     = $this->findKey('@version', $comment);
+        $this->version    = $this->findKey('@version', $comment);
+        $this->latex      = $this->findKey('@latex', $comment);
+
+        $this->description = $this->parseDescription($comment);
     }
 
     private function findKey(string $key, string $comment) : string
@@ -66,10 +70,35 @@ class Comment
                 $lines[$key] = trim($line, ' *');
             }
 
-            implode(' ', $lines);
+            $match = implode(' ', $lines);
         }
 
         return trim($match);
+    }
+
+    private function parseDescription(string $comment) : string
+    {
+        $lines       = explode("\n", $comment);
+        $description = '';
+
+        foreach ($lines as $key => $line) {
+            $line = substr($line, strpos($line, '*') + 2);
+
+            if (isset($line[0]) && ($line[0] === '@' || $line[0] === '{')) {
+                break;
+            }
+
+            if ($line !== '') {
+                $description .=  htmlspecialchars($line) . "\n";
+            }
+        }
+
+        return $description;
+    }
+
+    public function getDescription() : string
+    {
+        return $this->description;
     }
 
     public function getLicense() : string
@@ -80,5 +109,30 @@ class Comment
     public function getVar() : string
     {
         return $this->var;
+    }
+
+    public function getLatex() : string
+    {
+        return $this->latex;
+    }
+
+    public function getAuthor() : string
+    {
+        return $this->author;
+    }
+
+    public function getSince() : string
+    {
+        return $this->since;
+    }
+
+    public function getReturn() : string
+    {
+        return $this->return;
+    }
+
+    public function getThrows() : string
+    {
+        return $this->throws;
     }
 }
