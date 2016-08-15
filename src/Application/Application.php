@@ -15,7 +15,6 @@ class Application
     private $codeCoverageController = null;
     private $unitTestController = null;
 
-
     public function __construct(array $argv)
     {
         $source       = ArrayUtils::getArg('-s', $argv);
@@ -39,7 +38,7 @@ class Application
             if ($source instanceof Directory) {
                 $this->parse($source);
             } else {
-                if(StringUtils::endsWith($source->getPath(), '.php')) {
+                if (StringUtils::endsWith($source->getPath(), '.php')) {
                     $this->classController->parse($source);
                 }
             }

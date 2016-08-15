@@ -29,6 +29,51 @@ class Comment
         $this->parse($comment);
     }
 
+    public function getDescription() : string
+    {
+        return $this->description;
+    }
+
+    public function getLicense() : string
+    {
+        return $this->license;
+    }
+
+    public function getVar() : string
+    {
+        return $this->var;
+    }
+
+    public function getLatex() : string
+    {
+        return $this->latex;
+    }
+
+    public function getAuthor() : string
+    {
+        return $this->author;
+    }
+
+    public function getSince() : string
+    {
+        return $this->since;
+    }
+
+    public function getReturn() : string
+    {
+        return $this->return;
+    }
+
+    public function getThrows() : string
+    {
+        return $this->throws;
+    }
+
+    public function getParameters() : array
+    {
+        return $this->param;
+    }
+
     private function parse(string $comment)
     {
         $this->license    = $this->findKey('@license', $comment);
@@ -89,7 +134,7 @@ class Comment
             }
 
             if ($line !== '' && $description !== '') {
-                $description .=  htmlspecialchars($line) . "\n";
+                $description .= htmlspecialchars($line) . "\n";
             }
         }
 
@@ -98,68 +143,23 @@ class Comment
 
     private function parseParameter(string $comment) : array
     {
-    	$params = $this->findKey('@param', $comment);
-    	$params = preg_replace('!\s+!', ' ', $params);
+        $params = $this->findKey('@param', $comment);
+        $params = preg_replace('!\s+!', ' ', $params);
 
-    	if($params === '') {
-    		return [];
-    	}
+        if ($params === '') {
+            return [];
+        }
 
-    	$params = explode(' ', $params);
+        $params = explode(' ', $params);
 
-    	if(count($params) < 3) {
-    		return [];
-    	}
+        if (count($params) < 3) {
+            return [];
+        }
 
-    	return [[
-    		'type' => array_shift($params), 
-    		'var' => array_shift($params), 
-    		'desc' => implode(' ', $params)
-    	]];
-    }
-
-    public function getDescription() : string
-    {
-        return $this->description;
-    }
-
-    public function getLicense() : string
-    {
-        return $this->license;
-    }
-
-    public function getVar() : string
-    {
-        return $this->var;
-    }
-
-    public function getLatex() : string
-    {
-        return $this->latex;
-    }
-
-    public function getAuthor() : string
-    {
-        return $this->author;
-    }
-
-    public function getSince() : string
-    {
-        return $this->since;
-    }
-
-    public function getReturn() : string
-    {
-        return $this->return;
-    }
-
-    public function getThrows() : string
-    {
-        return $this->throws;
-    }
-
-    public function getParameters() : array
-    {
-    	return $this->param;
+        return [[
+                    'type' => array_shift($params),
+                    'var'  => array_shift($params),
+                    'desc' => implode(' ', $params),
+                ]];
     }
 }

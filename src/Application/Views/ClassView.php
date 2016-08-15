@@ -53,9 +53,9 @@ class ClassView extends DocView
             }
 
             $methodString = "    " . $this->formatModifier(implode(' ', Reflection::getModifierNames($method->getModifiers())))
-            . ' ' . $this->formatFunction() . ' ' . $this->linkFunction($this->ref->getName() . '-' . $method->getShortName(), $method->getShortName())
-            . '(' . trim($parameterString, ', ') . ')'
-            . ($method->hasReturnType() ? ' : ' . $this->linkType($method->getReturnType()) : '');
+                . ' ' . $this->formatFunction() . ' ' . $this->linkFunction($this->ref->getName() . '-' . $method->getShortName(), $method->getShortName())
+                . '(' . trim($parameterString, ', ') . ')'
+                . ($method->hasReturnType() ? ' : ' . $this->linkType($method->getReturnType()) : '');
 
             yield $methodString;
         }

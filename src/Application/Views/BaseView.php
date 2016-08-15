@@ -6,15 +6,15 @@ use phpOMS\Views\ViewAbstract;
 
 class BaseView extends ViewAbstract
 {
-	private $title = '';
+    private $title = '';
 
-	public function setTitle(string $title)
-	{
-		$this->title = $title;
-	}
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
-	public function getTitle()
-	{
-		return $this->title;
-	}
+    public function setTitle(string $title)
+    {
+        $this->title = $title;
+    }
 }
