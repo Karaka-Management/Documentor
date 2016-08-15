@@ -13,18 +13,18 @@ class ClassView extends DocView
         $type     = $this->ref->isInterface() ? 'interface ' : 'class ';
         $type     = $this->ref->isTrait() ? 'trait ' : $type;
         $name     = $this->ref->getShortName() . ' ';
-        $extends  = $this->ref->getParentClass() !== false ? 'extends ' . $this->linkType($this->ref->getParentClass()->getName()) . ' ' : '';
+        $extends  = $this->ref->getParentClass() !== false ? '<span class="extends">extends</span> ' . $this->linkType($this->ref->getParentClass()) . ' ' : '';
 
         $interfaces = $this->ref->getInterfaces();
         $implements = '';
 
         foreach ($interfaces as $interface) {
-            $implements .= $this->linkType($interface->getName(), $interface->getShortName()) . ', ';
+            $implements .= $this->linkType($interface, $interface->getShortName()) . ', ';
         }
 
         $implements = $implements !== '' ? 'implements ' . rtrim($implements, ', ') : '';
 
-        return trim($this->formatClassType($abstract . $type) . $name . $extends . $implements);
+        return trim($this->formatClassType($abstract . $type) . $this->formatClassName($name) . $extends . $implements);
     }
 
     public function getMembers()
@@ -46,14 +46,14 @@ class ClassView extends DocView
             foreach ($parameters as $parameter) {
                 $parameterString .= ($parameter->hasType() ? $this->linkType($parameter->getType()) . ' ' : '')
                     . ($parameter->isPassedByReference() ? '&' : '')
-                    . $this->formatVariable($parameter->getName())
+                    . $this->formatVariable('$' . $parameter->getName())
                     . ($parameter->isDefaultValueAvailable() ? ' = '
                         . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : is_array($parameter->getDefaultValue()) ? '[...]' : is_null($parameter->getDefaultValue()) ? 'null' : $parameter->getDefaultValue()) : '')
                     . ', ';
             }
 
             $methodString = "    " . $this->formatModifier(implode(' ', Reflection::getModifierNames($method->getModifiers())))
-            . ' ' . $this->formatFunction() . ' ' . $method->getShortName()
+            . ' ' . $this->formatFunction() . ' ' . $this->linkFunction($this->ref->getName() . '-' . $method->getShortName(), $method->getShortName())
             . '(' . trim($parameterString, ', ') . ')'
             . ($method->hasReturnType() ? ' : ' . $this->linkType($method->getReturnType()) : '');
 
@@ -64,5 +64,10 @@ class ClassView extends DocView
     private function formatClassType(string $type) : string
     {
         return '<span class="classType">' . $type . '</span>';
+    }
+
+    private function formatClassName(string $name) : string
+    {
+        return '<span class="className">' . $name . '</span>';
     }
 }

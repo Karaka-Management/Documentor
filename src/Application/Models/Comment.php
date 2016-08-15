@@ -16,7 +16,7 @@ class Comment
     private $todo = '';
     private $author = '';
     private $link = '';
-    private $param = '';
+    private $param = [];
     private $throws = '';
     private $return = '';
     private $title = '';
@@ -40,12 +40,12 @@ class Comment
         $this->todo       = $this->findKey('@todo', $comment);
         $this->author     = $this->findKey('@author', $comment);
         $this->link       = $this->findKey('@link', $comment);
-        $this->param      = $this->findKey('@param', $comment);
         $this->throws     = $this->findKey('@throws', $comment);
         $this->return     = $this->findKey('@return', $comment);
         $this->version    = $this->findKey('@version', $comment);
         $this->latex      = $this->findKey('@latex', $comment);
 
+        $this->param       = $this->parseParameter($comment);
         $this->description = $this->parseDescription($comment);
     }
 
@@ -88,12 +88,34 @@ class Comment
                 break;
             }
 
-            if ($line !== '') {
+            if ($line !== '' && $description !== '') {
                 $description .=  htmlspecialchars($line) . "\n";
             }
         }
 
-        return $description;
+        return trim($description, "\n ");
+    }
+
+    private function parseParameter(string $comment) : array
+    {
+    	$params = $this->findKey('@param', $comment);
+    	$params = preg_replace('!\s+!', ' ', $params);
+
+    	if($params === '') {
+    		return [];
+    	}
+
+    	$params = explode(' ', $params);
+
+    	if(count($params) < 3) {
+    		return [];
+    	}
+
+    	return [[
+    		'type' => array_shift($params), 
+    		'var' => array_shift($params), 
+    		'desc' => implode(' ', $params)
+    	]];
     }
 
     public function getDescription() : string
@@ -134,5 +156,10 @@ class Comment
     public function getThrows() : string
     {
         return $this->throws;
+    }
+
+    public function getParameters() : array
+    {
+    	return $this->param;
     }
 }

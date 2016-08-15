@@ -18,9 +18,11 @@ class ClassController
 
 	public function __construct(string $destination, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
 	{
-		$this->destination = $destination;
+		$this->destination = rtrim($destination, '/\\');
 		$this->codeCoverage = $codeCoverage;
 		$this->unitTest = $unitTest;
+
+		$this->createBaseFiles();
 	}
 
 	public function parse(File $file) 
@@ -35,6 +37,8 @@ class ClassController
 	private function parseClass(string $path) : DocView
 	{
 		$classView = new ClassView();
+		$path = str_replace('\\', '/', $path);
+
 		try {
 			include_once $path;
 
@@ -45,15 +49,16 @@ class ClassController
 			$classView->setPath($outPath . '.html');
 			$classView->setBase($this->destination);
 			$classView->setTemplate('/Documentor/src/Theme/class');
+			$classView->setTitle($class->getShortName());
 
 			$classView->setReflection($class);
 			$classView->setComment(new Comment($class->getDocComment()));
-			$classView->setTest($this->unitTest->getClass($class->getName()));
-			$classView->setCoverage($this->codeCoverage->getClass($class->getName()));
+			$classView->setTest([]);
+			$classView->setCoverage($this->codeCoverage->getClass($path) ?? []);
 
 			$methods = $class->getMethods();
 			foreach($methods as $method) {
-				$this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html');
+				$this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $path);
 			}
 		} catch(\Exception $e) {
 			echo $e->getMessage();
@@ -66,17 +71,47 @@ class ClassController
 		}
 	}
 
-	private function parseMethod(\ReflectionMethod $method, string $destination) 
+	private function parseMethod(\ReflectionMethod $method, string $destination, string $classPath) 
 	{
 		$methodView = new MethodView();
 		$methodView->setTemplate('/Documentor/src/Theme/method');
+		$methodView->setBase($this->destination);
 		$methodView->setReflection($method);
-		$methodView->setComment(new Comment($method->getDocComment()));
+		$docs = $method->getDocComment();
+
+		try {
+			if(strpos($docs, '@inheritdoc') !== false) {
+				$comment = new Comment($method->getPrototype()->getDocComment());
+			} else {
+				$comment = new Comment($docs);
+			}
+		} catch (\Exception $e) {
+			$comment = new Comment($docs);
+		}
+
+		$methodView->setComment($comment);
 		$methodView->setPath($destination);
-		$methodView->setTest($this->unitTest->getMethod($method->getName()));
-		$methodView->setCoverage($this->codeCoverage->getMethod($method->getName()));
+		$methodView->setTest([]);
+		$methodView->setCoverage($this->codeCoverage->getMethod($classPath, $method->getShortName()) ?? []);
+		$methodView->setTitle($method->getDeclaringClass()->getShortName() . ' ~ ' . $method->getShortName());
 
 		$this->outputRender($methodView);
+	}
+
+	private function createBaseFiles()
+	{
+		try {
+			File::copy(__DIR__ . '/../../Theme/css/styles.css', $this->destination . '/css/styles.css');
+
+			$images = new Directory(__DIR__ . '/../../Theme/img');
+			foreach($images as $image) {
+				if($image instanceof File) {
+					File::copy($image->getPath(), $this->destination . '/img/' . $image->getName());
+				}
+			}
+		} catch(\Exception $e) {
+			echo $e->getMessage();
+		}
 	}
 
 	private function outputRender(ViewAbstract $view)

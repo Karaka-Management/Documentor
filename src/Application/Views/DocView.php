@@ -3,9 +3,8 @@
 namespace Documentor\src\Application\Views;
 
 use Documentor\src\Application\Models\Comment;
-use phpOMS\Views\ViewAbstract;
 
-class DocView extends ViewAbstract
+class DocView extends BaseView
 {
     protected $base = '';
 
@@ -13,11 +12,15 @@ class DocView extends ViewAbstract
 
     public $ref = null;
 
-    private $test = null;
+    protected $test = [];
 
-    private $comment = null;
+    protected $comment = null;
 
-    private $coverage = null;
+    protected $coverage = [];
+
+    public function __construct() {
+    	$this->comment = new Comment('');
+    }
 
     public function setPath(string $path)
     {
@@ -49,12 +52,12 @@ class DocView extends ViewAbstract
         return $this->comment;
     }
 
-    public function setTest($test)
+    public function setTest(array $test)
     {
         $this->test = $test;
     }
 
-    public function setCoverage($coverage)
+    public function setCoverage(array $coverage)
     {
         $this->coverage = $coverage;
     }
@@ -76,12 +79,20 @@ class DocView extends ViewAbstract
 
     protected function formatVariable(string $var) : string
     {
-        return '<span class="variable">$' . $var . '</span>';
+        return '<span class="variable">' . $var . '</span>';
     }
 
-    protected function linkType(string $type, string $output = null) : string
+    protected function linkType($type, string $output = null) : string
     {
-        if($type === 'string' || $type === 'int' || $type === 'float' || $type === 'bool' || $type === 'array' || $type === 'Closure' ) {
+    	if($type instanceof \ReflectionType) {
+    		$type = (string) $type;
+    	} elseif($type instanceof \ReflectionClass && $type->isUserDefined()) {
+    		$type = $type->getName();
+    	}
+
+        if($type instanceof \ReflectionClass && !$type->isUserDefined()) {
+        	return $this->formatType($type->getShortName());
+        } elseif($type === 'string' || $type === 'int' || $type === 'float' || $type === 'bool' || $type === 'array') {
             return $this->formatType($type);
         } elseif(strpos($type, '&') !== false || strpos($type, '[') !== false | strpos($type, '<') !== false) {
             return $this->formatType(htmlspecialchars($output ?? $type));
@@ -89,5 +100,11 @@ class DocView extends ViewAbstract
             $text = explode('\\', $type);
             return '<a href="' . $this->base . '/' . $type . '.html">' .  $this->formatType((isset($output) ? $output : end($text))) . '</a>';
         }
+    }
+
+    protected function linkFunction(string $type, string $output = null) : string
+    {
+        $text = explode('\\', $type);
+        return '<a href="' . $this->base . '/' . $type . '.html">' .  $this->formatVariable((isset($output) ? $output : end($text))) . '</a>';
     }
 }

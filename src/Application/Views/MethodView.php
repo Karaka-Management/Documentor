@@ -15,17 +15,22 @@ class MethodView extends DocView
         foreach ($parameters as $parameter) {
             $parameterString .= ($parameter->hasType() ? $this->linkType($parameter->getType()) . ' ' : '')
                 . ($parameter->isPassedByReference() ? '&' : '')
-                . $this->formatVariable($parameter->getName())
+                . $this->formatVariable('$' . $parameter->getName())
                 . ($parameter->isDefaultValueAvailable() ? ' = '
                     . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : is_array($parameter->getDefaultValue()) ? '[...]' : is_null($parameter->getDefaultValue()) ? 'null' : $parameter->getDefaultValue()) : '')
                 . ', ';
         }
 
-        $methodString = "    " . $this->formatModifier(implode(' ', Reflection::getModifierNames($method->getModifiers())))
+        $methodString = $this->formatModifier(implode(' ', Reflection::getModifierNames($method->getModifiers())))
             . ' ' . $this->formatFunction() . ' ' . $method->getShortName()
             . '(' . trim($parameterString, ', ') . ')'
             . ($method->hasReturnType() ? ' : ' . $this->linkType($method->getReturnType()) : '');
 
         return $methodString;
+    }
+
+    public function getClassLink() : string
+    {
+        return '<a href="' . $this->base . '/' . $this->ref->getDeclaringClass()->getName() . '.html">' . $this->ref->getDeclaringClass()->getShortName() . '</a>';
     }
 }
