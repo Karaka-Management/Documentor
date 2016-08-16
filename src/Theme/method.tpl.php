@@ -23,4 +23,6 @@
 <h2>Examples</h2>
 <pre>
 </pre>
+<h2>Code</h2>
+<pre><?= $this->code; ?></pre>
 <?php include 'footer.tpl.php'; ?>

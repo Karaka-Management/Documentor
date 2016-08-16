@@ -63,7 +63,7 @@ class CodeCoverageController
 
                         $this->coverage[$class]['function'][$line->getAttribute('name')] = [
                             'complexity' => (int) $line->getAttribute('complexity'),
-                            'crap' => (int) $line->getAttribute('crap'),
+                            'crap' => (float) $line->getAttribute('crap'),
                         ];
                     }
                 }

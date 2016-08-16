@@ -12,6 +12,7 @@ class DocView extends BaseView
     protected $comment = null;
     protected $coverage = [];
     private $path = '';
+    protected $code = '';
 
     public function __construct()
     {
@@ -31,6 +32,11 @@ class DocView extends BaseView
     public function setComment(Comment $comment)
     {
         $this->comment = $comment;
+    }
+
+    public function setCode(string $code) 
+    {
+    	$this->code = $code;
     }
 
     public function setTest(array $test)

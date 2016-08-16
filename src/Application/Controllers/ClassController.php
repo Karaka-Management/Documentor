@@ -19,6 +19,7 @@ class ClassController
 	private $unitTest = null;
 	private $toc = [];
 	private $files = [];
+	private $loc = [];
 
 	public function __construct(string $destination, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
 	{
@@ -67,6 +68,8 @@ class ClassController
 
 		try {
 			include_once $path;
+
+			$this->loc = file($path);
 
 			$className = substr($path, strlen(realpath(__DIR__ . '/../../../../')), -4);
 			$className = str_replace('/', '\\', $className);
@@ -127,6 +130,7 @@ class ClassController
 		$methodView->setTest([]);
 		$methodView->setCoverage($this->codeCoverage->getMethod($className, $method->getShortName()) ?? []);
 		$methodView->setTitle($method->getDeclaringClass()->getShortName() . ' ~ ' . $method->getShortName());
+		$methodView->setCode(implode('', array_slice($this->loc, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1)));
 
 		$this->outputRender($methodView);
 	}
