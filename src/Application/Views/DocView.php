@@ -6,7 +6,7 @@ use Documentor\src\Application\Models\Comment;
 
 class DocView extends BaseView
 {
-    public $ref = null;
+    protected $ref = null;
     protected $base = '';
     protected $test = [];
     protected $comment = null;
@@ -16,21 +16,6 @@ class DocView extends BaseView
     public function __construct()
     {
         $this->comment = new Comment('');
-    }
-
-    public function setBase(string $path)
-    {
-        $this->base = $path;
-    }
-
-    public function getPath() : string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path)
-    {
-        $this->path = $path;
     }
 
     public function setReflection($ref)

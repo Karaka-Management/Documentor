@@ -17,4 +17,19 @@ class BaseView extends ViewAbstract
     {
         $this->title = $title;
     }
+
+    public function setBase(string $path)
+    {
+        $this->base = $path;
+    }
+
+    public function getPath() : string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path)
+    {
+        $this->path = $path;
+    }
 }

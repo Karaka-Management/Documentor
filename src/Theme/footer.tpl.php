@@ -11,3 +11,6 @@
     </div>
 </footer>
 </div>
+<script src='<?= $this->base; ?>/js/searchDataset.js'></script>
+<script src='<?= $this->base; ?>/js/documentor.js'></script>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>

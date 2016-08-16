@@ -15,6 +15,8 @@ class ClassController
 	private $destination = '';
 	private $codeCoverage = null;
 	private $unitTest = null;
+	private $toc = [];
+	private $files = [];
 
 	public function __construct(string $destination, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
 	{
@@ -34,6 +36,28 @@ class ClassController
 		}
 	}
 
+	public function createSearchSet()
+	{
+		$js = 'var searchDataset = [];';
+		foreach($this->files as $file) {
+			$js .= 'searchDataset.push_back(' . $file . ');' . "\n";
+		}
+
+		file_put_contents($this->destination . '/js/searchDataset.js', $js);
+	}
+
+	public function createTableOfContents() 
+	{
+		$tocView = new TableOfContentsView();
+		$tocView->setPath($this->destination . '/tableOfContents' . '.html');
+		$tocView->setBase($this->destination);
+		$tocView->setTemplate('/Documentor/src/Theme/tableOfContents');
+		$tocView->setTitle($class->getShortName());
+		$tocView->setTableOfContents($this->toc);
+
+		$this->outputRender($tocView);
+	}
+
 	private function parseClass(string $path) : DocView
 	{
 		$classView = new ClassView();
@@ -45,7 +69,11 @@ class ClassController
 			$className = substr($path, strlen(realpath(__DIR__ . '/../../../../')), -4);
 			$className = str_replace('/', '\\', $className);
 			$class = new \ReflectionClass($className);
+
+			$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, [], '\\')
+			$this->files[] = $class->getName();
 			$outPath = $this->destination . '/' . str_replace('\\', '/', $class->getName());
+
 			$classView->setPath($outPath . '.html');
 			$classView->setBase($this->destination);
 			$classView->setTemplate('/Documentor/src/Theme/class');
@@ -58,8 +86,11 @@ class ClassController
 
 			$methods = $class->getMethods();
 			foreach($methods as $method) {
+				$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, $method->getShortName(), '\\')
 				$this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $path);
+				$this->files[] = $class->getName() . '-' . $method->getShortName();
 			}
+
 		} catch(\Exception $e) {
 			echo $e->getMessage();
 			echo $e->getFile();
@@ -102,6 +133,7 @@ class ClassController
 	{
 		try {
 			File::copy(__DIR__ . '/../../Theme/css/styles.css', $this->destination . '/css/styles.css');
+			File::copy(__DIR__ . '/../../Theme/js/documentor.js', $this->destination . '/js/documentor.js');
 
 			$images = new Directory(__DIR__ . '/../../Theme/img');
 			foreach($images as $image) {
@@ -116,7 +148,7 @@ class ClassController
 
 	private function outputRender(ViewAbstract $view)
 	{
-		Directory::createPath(dirname($view->getPath()), '0777', true);
+		Directory::createPath(dirname($view->getPath()), '0644', true);
 		file_put_contents($view->getPath(), $view->render());
 	}
 }

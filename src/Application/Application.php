@@ -23,13 +23,13 @@ class Application
         $codeCoverage = ArrayUtils::getArg('-c', $argv);
         $sources      = new Directory($source, '*');
 
-        $this->codeCoverageController = new CodeCoverageController($destination);
+        $this->codeCoverageController = new CodeCoverageController($destination, $codeCoverage);
         $this->unitTestController     = new UnitTestController($destination);
         $this->classController        = new ClassController($destination, $this->codeCoverageController, $this->unitTestController);
 
-        $this->codeCoverageController->parse($codeCoverage);
         $this->unitTestController->parse($unitTest);
         $this->parse($sources);
+        $this->classController->createTableOfContents();
     }
 
     public function parse(Directory $sources)
@@ -37,10 +37,8 @@ class Application
         foreach ($sources as $source) {
             if ($source instanceof Directory) {
                 $this->parse($source);
-            } else {
-                if (StringUtils::endsWith($source->getPath(), '.php')) {
-                    $this->classController->parse($source);
-                }
+            } elseif (StringUtils::endsWith($source->getPath(), '.php')) {
+                $this->classController->parse($source);
             }
         }
     }

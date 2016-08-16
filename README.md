@@ -25,6 +25,7 @@ php documentor.phar -s <SOURCE_PATH> -d <DESTINATION_PATH>
 * `-h` Show help
 * `-s` Source directory
 * `-d` Destination directory
+* `-c` Code coverage source (`coverage-clover`)
 
 ## Supported Key Words
 

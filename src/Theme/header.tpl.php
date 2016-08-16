@@ -15,6 +15,8 @@
     <div class="cont">
         <div id="header-info">
             <h1>Documentation</h1>
+            <input id='search'>
+            <ul id='search-result'></ul>
         </div>
     </div>
     <div style="clear: both;"></div>
