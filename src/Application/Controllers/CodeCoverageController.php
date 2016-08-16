@@ -2,6 +2,10 @@
 
 namespace Documentor\src\Application\Controllers;
 
+use Documentor\src\Application\Views\CoverageView;
+use phpOMS\System\File\Directory;
+use phpOMS\Views\ViewAbstract;
+
 class CodeCoverageController
 {
     private $destination = '';
@@ -34,11 +38,17 @@ class CodeCoverageController
         foreach ($files as $file) {
             if($file->getElementsByTagName('class')[0] !== null) {
                 $class = str_replace('\\', '/', $file->getAttribute('name'));
-                $this->coverage[$class] = [];
+                $this->coverage[$class] = [
+                    'metrics' => [
+                        'complexity' => 0,
+                        'methods' => 0,
+                        'coveredmethods' => 0,
+                    ]
+                ];
 
                 if(($metrics = $file->getElementsByTagName('class')[0]->getElementsByTagName('metrics')[0]) !== null) {
                     $this->coverage[$class]['metrics'] = [
-                        'complexity' => $metrics->getAttribute('complexity'),
+                        'complexity' => (int) $metrics->getAttribute('complexity'),
                         'methods' => (int) $metrics->getAttribute('methods'),
                         'coveredmethods' => (int) $metrics->getAttribute('coveredmethods'),
                     ];
@@ -47,10 +57,13 @@ class CodeCoverageController
                 $lines = $file->getElementsByTagName('line');
                 foreach($lines as $line) {
                     if($line->getAttribute('type') === 'method') {
-                        $this->coverage[$class]['function'] = [];
+                        if(!isset($this->coverage[$class]['function'])) {
+                            $this->coverage[$class]['function'] = [];
+                        }
+
                         $this->coverage[$class]['function'][$line->getAttribute('name')] = [
-                            'complexity' => $line->getAttribute('complexity'),
-                            'crap' => $line->getAttribute('crap'),
+                            'complexity' => (int) $line->getAttribute('complexity'),
+                            'crap' => (int) $line->getAttribute('crap'),
                         ];
                     }
                 }
@@ -96,7 +109,7 @@ class CodeCoverageController
 
     private function createBaseFiles() 
     {
-        $coverageView = new MethodView();
+        $coverageView = new CoverageView();
         $coverageView->setTemplate('/Documentor/src/Theme/coverage');
         $coverageView->setBase($this->destination);
         $coverageView->setPath($this->destination . '/coverage' . '.html');

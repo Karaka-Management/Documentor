@@ -90,4 +90,12 @@ class DocView extends BaseView
     {
         return '<span class="variable">' . $var . '</span>';
     }
+
+    protected function getPercentage($value) : int
+    {
+        $min = !isset($this->coverage['complexity']) || $this->coverage['complexity'] < 1 ? -8 : $this->coverage['complexity'];
+        $out = (int) (100 / (1 + exp(-log($min/50))));
+
+        return $out < 1 ? 1 : $out;
+    }
 }

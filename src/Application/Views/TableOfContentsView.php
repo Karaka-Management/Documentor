@@ -2,7 +2,7 @@
 
 namespace Documentor\src\Application\Views;
 
-class CoverageView extends BaseView
+class TableOfContentsView extends BaseView
 {
 	private $toc = [];
 

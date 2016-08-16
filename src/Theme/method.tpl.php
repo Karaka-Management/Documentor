@@ -13,13 +13,13 @@
 <h2>Throws</h2>
 <p><?= $this->getComment()->getThrows(); ?></p>
 <h2>UnitTests</h2>
+<h2>CodeCoverage</h2>
 <h3>Complexity</h3>
-<div class="meter red"><span style="width: <?= (int) log($this->coverage['complexity'] ?? 0); ?>%"></span></div>
+<div class="meter orange"><span style="width: <?= $this->getPercentage($this->coverage['complexity'] ?? null); ?>%"></span></div>
 <p><?= $this->coverage['complexity'] ?? 0; ?></p>
 <h3>Crap</h3>
-<div class="meter red"><span style="width: <?= (int) log($this->coverage['crap'] ?? 0); ?>%"></span></div>
+<div class="meter orange"><span style="width: <?= $this->getPercentage($this->coverage['crap'] ?? null); ?>%"></span></div>
 <p><?= $this->coverage['crap'] ?? 0; ?></p>
-<h2>CodeCoverage</h2>
 <h2>Examples</h2>
 <pre>
 </pre>

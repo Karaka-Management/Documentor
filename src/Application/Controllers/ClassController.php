@@ -6,8 +6,10 @@ use Documentor\src\Application\Models\Comment;
 use Documentor\src\Application\Views\ClassView;
 use Documentor\src\Application\Views\DocView;
 use Documentor\src\Application\Views\MethodView;
+use Documentor\src\Application\Views\TableOfContentsView;
 use phpOMS\System\File\Directory;
 use phpOMS\System\File\File;
+use phpOMS\Utils\ArrayUtils;
 use phpOMS\Views\ViewAbstract;
 
 class ClassController
@@ -40,7 +42,7 @@ class ClassController
 	{
 		$js = 'var searchDataset = [];';
 		foreach($this->files as $file) {
-			$js .= 'searchDataset.push_back(' . $file . ');' . "\n";
+			$js .= "\n" . 'searchDataset.push([\'' . str_replace('\\', '\\\\', $file[0]) . '\', \'' . $file[1] . '\']);';
 		}
 
 		file_put_contents($this->destination . '/js/searchDataset.js', $js);
@@ -52,7 +54,7 @@ class ClassController
 		$tocView->setPath($this->destination . '/tableOfContents' . '.html');
 		$tocView->setBase($this->destination);
 		$tocView->setTemplate('/Documentor/src/Theme/tableOfContents');
-		$tocView->setTitle($class->getShortName());
+		$tocView->setTitle('Table of Contents');
 		$tocView->setTableOfContents($this->toc);
 
 		$this->outputRender($tocView);
@@ -70,8 +72,8 @@ class ClassController
 			$className = str_replace('/', '\\', $className);
 			$class = new \ReflectionClass($className);
 
-			$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, [], '\\')
-			$this->files[] = $class->getName();
+			$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, [], '\\');
+			$this->files[] = [$class->getName(), $class->getShortName()];
 			$outPath = $this->destination . '/' . str_replace('\\', '/', $class->getName());
 
 			$classView->setPath($outPath . '.html');
@@ -86,9 +88,9 @@ class ClassController
 
 			$methods = $class->getMethods();
 			foreach($methods as $method) {
-				$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, $method->getShortName(), '\\')
+				$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, $method->getShortName(), '\\');
 				$this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $path);
-				$this->files[] = $class->getName() . '-' . $method->getShortName();
+				$this->files[] = [$class->getName() . '-' . $method->getShortName(), $class->getShortName() . '-' . $method->getShortName()];
 			}
 
 		} catch(\Exception $e) {

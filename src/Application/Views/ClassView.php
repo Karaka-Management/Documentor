@@ -70,4 +70,13 @@ class ClassView extends DocView
     {
         return '<span class="className">' . $name . '</span>';
     }
+
+    public function getCoverageRatio() : int
+    {
+        if (!isset($this->coverage['methods']) || $this->coverage['methods'] < 1) {
+            return 1;
+        }
+
+        return (int) (100 * ($this->coverage['coveredmethods'] ?? 0) / ($this->coverage['methods'] ?? 1));
+    }
 }

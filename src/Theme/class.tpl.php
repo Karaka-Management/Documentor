@@ -6,11 +6,11 @@
 <h2>UnitTests</h2>
 <h2>CodeCoverage</h2>
 <h3>Complexity</h3>
-<div class="meter red"><span style="width: <?= (int) log($this->coverage['complexity'] ?? 0); ?>%"></span></div>
+<div class="meter orange"><span style="width: <?= $this->getPercentage($this->coverage['complexity'] ?? null); ?>%"></span></div>
 <p><?= $this->coverage['complexity'] ?? 0; ?></p>
 <h3>Coverage</h3>
-<div class="meter orange"><span style="width: <?= (int) ($this->coverage['coveredmethods'] ?? 0 / $this->coverage['methods'] ?? 1); ?>%"></span></div>
-<p><?= $this->coverage['coveredmethods'] ?? 0; ?>/<?= $this->coverage['methods'] ?? 1; ?></p>
+<div class="meter orange"><span style="width: <?= $this->getCoverageRatio(); ?>%"></span></div>
+<p><?= $this->coverage['coveredmethods'] ?? 0; ?>/<?= $this->coverage['methods'] ?? 0; ?></p>
 <h2>Overview</h2>
 <pre><?= $this->getTop(); ?><?= "\n{"; ?>
 <?php foreach($this->getMembers() as $member) { echo "\n" . $member; } echo "\n"; ?>

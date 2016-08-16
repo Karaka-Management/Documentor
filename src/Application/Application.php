@@ -30,6 +30,7 @@ class Application
         $this->unitTestController->parse($unitTest);
         $this->parse($sources);
         $this->classController->createTableOfContents();
+        $this->classController->createSearchSet();
     }
 
     public function parse(Directory $sources)
