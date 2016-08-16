@@ -36,8 +36,8 @@ class CodeCoverageController
         $files = $dom->getElementsByTagName('file');
 
         foreach ($files as $file) {
-            if($file->getElementsByTagName('class')[0] !== null) {
-                $class = str_replace('\\', '/', $file->getAttribute('name'));
+            if(($classElement = $file->getElementsByTagName('class')[0]) !== null) {
+                $class = $classElement->getAttribute('namespace') . '\\' . $classElement->getAttribute('name');
                 $this->coverage[$class] = [
                     'metrics' => [
                         'complexity' => 0,

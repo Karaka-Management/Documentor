@@ -84,12 +84,12 @@ class ClassController
 			$classView->setReflection($class);
 			$classView->setComment(new Comment($class->getDocComment()));
 			$classView->setTest([]);
-			$classView->setCoverage($this->codeCoverage->getClass($path) ?? []);
+			$classView->setCoverage($this->codeCoverage->getClass($class->getName()) ?? []);
 
 			$methods = $class->getMethods();
 			foreach($methods as $method) {
 				$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, $method->getShortName(), '\\');
-				$this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $path);
+				$this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $class->getName());
 				$this->files[] = [$class->getName() . '-' . $method->getShortName(), $class->getShortName() . '-' . $method->getShortName()];
 			}
 
@@ -104,7 +104,7 @@ class ClassController
 		}
 	}
 
-	private function parseMethod(\ReflectionMethod $method, string $destination, string $classPath) 
+	private function parseMethod(\ReflectionMethod $method, string $destination, string $className) 
 	{
 		$methodView = new MethodView();
 		$methodView->setTemplate('/Documentor/src/Theme/method');
@@ -125,7 +125,7 @@ class ClassController
 		$methodView->setComment($comment);
 		$methodView->setPath($destination);
 		$methodView->setTest([]);
-		$methodView->setCoverage($this->codeCoverage->getMethod($classPath, $method->getShortName()) ?? []);
+		$methodView->setCoverage($this->codeCoverage->getMethod($className, $method->getShortName()) ?? []);
 		$methodView->setTitle($method->getDeclaringClass()->getShortName() . ' ~ ' . $method->getShortName());
 
 		$this->outputRender($methodView);
