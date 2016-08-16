@@ -12,14 +12,13 @@
 <p><?= $this->ref->hasReturnType() ? $this->ref->getReturnType() : $this->getComment()->getReturn(); ?></p>
 <h2>Throws</h2>
 <p><?= $this->getComment()->getThrows(); ?></p>
-<h2>UnitTests</h2>
-<h2>CodeCoverage</h2>
+<h2>Tests</h2>
 <h3>Complexity</h3>
+<p>Cyclomatic complexity is a software metric (measurement), used to indicate the complexity of a program. It is a quantitative measure of the number of linearly independent paths through a program's source code.</p>
 <div class="meter orange"><span style="width: <?= $this->getPercentage($this->coverage['complexity'] ?? null); ?>%"></span></div>
-<p><?= $this->coverage['complexity'] ?? 0; ?></p>
-<h3>Crap</h3>
+<h3>CRAP</h3>
+<p>The Change Risk Anti-Patterns (CRAP) Index is calculated based on the cyclomatic complexity and code coverage of a unit of code. Code that is not too complex and has an adequate test coverage will have a low CRAP index. The CRAP index can be lowered by writing tests and by refactoring the code to lower its complexity.</p>
 <div class="meter orange"><span style="width: <?= $this->getPercentage($this->coverage['crap'] ?? null); ?>%"></span></div>
-<p><?= $this->coverage['crap'] ?? 0; ?></p>
 <h2>Examples</h2>
 <pre>
 </pre>
