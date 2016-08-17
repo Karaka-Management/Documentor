@@ -7,14 +7,14 @@
     <div id="logo-name">Orange Management</div>
     <nav>
         <ul>
-            <li class=""><a href="?p=main">MAIN</a><li class=""><a href="?p=positions">GUIDE</a><li class=""><a href="?p=code">DOCS</a><li class=""><a href="?p=docs">TEST</a><li class=""><a href="?p=positions">COVERAGE</a>
+            <li class="<?= $this->section === '' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/index.html">MAIN</a><li class="<?= $this->section === 'Guide' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/guide/index.html">GUIDE</a><li class="<?= $this->section === 'Documentation' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/tableOfContents.html">DOCS</a><li class="<?= $this->section === 'Test' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/test.html">TEST</a><li class="<?= $this->section === 'Coverage' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/coverage.html">COVERAGE</a>
         </ul>
     </nav>
 </div>
 <header>
     <div class="cont">
         <div id="header-info">
-            <h1>Documentation</h1>
+            <h1><?= $this->section; ?></h1>
             <div id="header-search-box">
                 <div class="holder"><input id="search"></div>
                 <ul id="search-result"></ul>
@@ -24,4 +24,4 @@
     <div style="clear: both;"></div>
 </header>
 <div class="grad grad-main"></div>
- <main><div class="cont">
+<main><div class="cont">

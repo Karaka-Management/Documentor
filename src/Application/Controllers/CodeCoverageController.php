@@ -117,6 +117,7 @@ class CodeCoverageController
         $coverageView->setCoveredClasses($this->countCoveredClasses());
         $coverageView->setMethods($this->countMethods());
         $coverageView->setCoveredMethods($this->countCoveredMethods());
+        $coverageView->setSection('Coverage');
 
         $this->outputRender($coverageView);
     }

@@ -56,6 +56,7 @@ class ClassController
 		$tocView->setBase($this->destination);
 		$tocView->setTemplate('/Documentor/src/Theme/tableOfContents');
 		$tocView->setTitle('Table of Contents');
+		$tocView->setSection('Documentation');
 		$tocView->setTableOfContents($this->toc);
 
 		$this->outputRender($tocView);
@@ -83,6 +84,7 @@ class ClassController
 			$classView->setBase($this->destination);
 			$classView->setTemplate('/Documentor/src/Theme/class');
 			$classView->setTitle($class->getShortName());
+			$classView->setSection('Documentation');
 
 			$classView->setReflection($class);
 			$classView->setComment(new Comment($class->getDocComment()));
@@ -130,6 +132,7 @@ class ClassController
 		$methodView->setTest([]);
 		$methodView->setCoverage($this->codeCoverage->getMethod($className, $method->getShortName()) ?? []);
 		$methodView->setTitle($method->getDeclaringClass()->getShortName() . ' ~ ' . $method->getShortName());
+		$methodView->setSection('Documentation');
 		$methodView->setCode(implode('', array_slice($this->loc, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1)));
 
 		$this->outputRender($methodView);

@@ -8,6 +8,18 @@ class BaseView extends ViewAbstract
 {
     private $title = '';
 
+    private $section = '';
+
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    public function setSection(string $section)
+    {
+        $this->section = $section;
+    }
+
     public function getTitle()
     {
         return $this->title;
