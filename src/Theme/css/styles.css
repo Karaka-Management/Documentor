@@ -226,3 +226,20 @@ a .type, a .variable {
 #search-result a:hover {
     color: #ffbf00;
 }
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse; 
+    width: 1%;
+
+}
+
+th {
+    background: #f4f4f4;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #dddddd;
+    white-space: nowrap;
+}

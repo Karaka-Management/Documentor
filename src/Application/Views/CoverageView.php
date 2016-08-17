@@ -4,10 +4,12 @@ namespace Documentor\src\Application\Views;
 
 class CoverageView extends BaseView
 {
-	public $classes = 1;
-	public $coveredClasses = 0;
-	public $methods = 1;
-	public $coveredMethods = 0;
+	protected $classes = 0;
+	protected $coveredClasses = 0;
+	protected $methods = 0;
+	protected $coveredMethods = 0;
+	protected $complexity = 0;
+	protected $crap = 0.0;
 
 	public function setClasses(int $amount)
 	{
@@ -27,5 +29,15 @@ class CoverageView extends BaseView
 	public function setCoveredMethods(int $amount)
 	{
 		$this->coveredMethods = $amount;
+	}
+
+	public function setComplexity(int $complexity)
+	{
+		$this->complexity = $complexity;
+	}
+
+	public function setCrap(float $crap)
+	{
+		$this->crap = $crap;
 	}
 }
