@@ -4,20 +4,21 @@ This documentation generator creates a html documentation based on the comments 
 
 ## Requirements
 
-PHP Version >= 7.0
+* PHP Version >= 7.0
+* phpOMS
 
 ## Usage
 
 A list of arguments can be found with:
 
 ```
-php documentor.phar -h
+php Documentor/src/index.php -h
 ```
 
 The default usage would be:
 
 ```
-php documentor.phar -s <SOURCE_PATH> -d <DESTINATION_PATH>
+php Documentor/src/index.php -s <SOURCE_PATH> -d <DESTINATION_PATH> -c <COVERAGE_PATH>
 ```
 
 ### Arguments
