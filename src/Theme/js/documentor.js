@@ -101,7 +101,7 @@
 
             a = document.createElement('a');
             a.appendChild(document.createTextNode(out[out.length - 2] + '\\' + matches[i][1][1]));
-            a.href = 'test';
+            a.href = BASE + '/' + matches[i][1][0].replace('/\\/g', '/') + '.html';
 
             li = document.createElement('li');
             li.appendChild(a);

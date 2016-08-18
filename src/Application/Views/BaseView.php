@@ -32,7 +32,7 @@ class BaseView extends ViewAbstract
 
     public function setBase(string $path)
     {
-        $this->base = $path;
+        $this->base = str_replace('\\', '/', $path);
     }
 
     public function getPath() : string
