@@ -10,10 +10,12 @@ class CodeCoverageController
 {
     private $destination = '';
     private $coverage = [];
+    private $totalCrap = 0;
+    private $totalComplexity = 0;
 
     public function __construct(string $destination, string $path)
     {
-        $this->destination = $destination; 
+        $this->destination = $destination;
 
         $this->parse($path);
         $this->createBaseFiles();
@@ -36,37 +38,41 @@ class CodeCoverageController
         $files = $dom->getElementsByTagName('file');
 
         foreach ($files as $file) {
-            if(($classElement = $file->getElementsByTagName('class')[0]) !== null) {
-                $class = $classElement->getAttribute('namespace') . '\\' . $classElement->getAttribute('name');
+            if (($classElement = $file->getElementsByTagName('class')[0]) !== null) {
+                $class                  = $classElement->getAttribute('namespace') . '\\' . $classElement->getAttribute('name');
                 $this->coverage[$class] = [
                     'metrics' => [
-                        'complexity' => 0,
-                        'methods' => 0,
+                        'complexity'     => 0,
+                        'methods'        => 0,
                         'coveredmethods' => 0,
-                        'crap' => 0.0,
-                    ]
+                        'crap'           => 0.0,
+                    ],
                 ];
 
-                if(($metrics = $file->getElementsByTagName('class')[0]->getElementsByTagName('metrics')[0]) !== null) {
+                if (($metrics = $file->getElementsByTagName('class')[0]->getElementsByTagName('metrics')[0]) !== null) {
                     $this->coverage[$class]['metrics'] = [
-                        'complexity' => (int) $metrics->getAttribute('complexity'),
-                        'methods' => (int) $metrics->getAttribute('methods'),
+                        'complexity'     => (int) $metrics->getAttribute('complexity'),
+                        'methods'        => (int) $metrics->getAttribute('methods'),
                         'coveredmethods' => (int) $metrics->getAttribute('coveredmethods'),
+                        'crap'           => 0.0,
                     ];
+
+                    $this->totalComplexity += (int) $metrics->getAttribute('complexity');
                 }
 
                 $lines = $file->getElementsByTagName('line');
-                foreach($lines as $line) {
-                    if($line->getAttribute('type') === 'method') {
-                        if(!isset($this->coverage[$class]['function'])) {
+                foreach ($lines as $line) {
+                    if ($line->getAttribute('type') === 'method') {
+                        if (!isset($this->coverage[$class]['function'])) {
                             $this->coverage[$class]['function'] = [];
                         }
 
+                        $this->totalCrap += (float) $line->getAttribute('crap');
                         $this->coverage[$class]['metrics']['crap'] += (float) $line->getAttribute('crap');
 
                         $this->coverage[$class]['function'][$line->getAttribute('name')] = [
                             'complexity' => (int) $line->getAttribute('complexity'),
-                            'crap' => (float) $line->getAttribute('crap'),
+                            'crap'       => (float) $line->getAttribute('crap'),
                         ];
                     }
                 }
@@ -77,8 +83,8 @@ class CodeCoverageController
     private function countMethods() : int
     {
         $count = 0;
-        foreach($this->coverage as $class) {
-            if(isset($class['metrics'])) {
+        foreach ($this->coverage as $class) {
+            if (isset($class['metrics'])) {
                 $count += $class['metrics']['methods'];
             }
         }
@@ -89,8 +95,8 @@ class CodeCoverageController
     private function countCoveredMethods() : int
     {
         $count = 0;
-        foreach($this->coverage as $class) {
-            if(isset($class['metrics'])) {
+        foreach ($this->coverage as $class) {
+            if (isset($class['metrics'])) {
                 $count += $class['metrics']['coveredmethods'];
             }
         }
@@ -101,8 +107,8 @@ class CodeCoverageController
     private function countCoveredClasses() : int
     {
         $count = 0;
-        foreach($this->coverage as $class) {
-            if(isset($class['metrics'])) {
+        foreach ($this->coverage as $class) {
+            if (isset($class['metrics'])) {
                 $count += $class['metrics']['coveredmethods'] === $class['metrics']['methods'] ? 1 : 0;
             }
         }
@@ -110,41 +116,101 @@ class CodeCoverageController
         return $count;
     }
 
-    private function getTopUncoveredMethods() : array 
+    private static function sortUncovered($a, $b)
     {
+        if ($a['uncovered'] == $b['uncovered']) {
+            return 0;
+        }
+
+        return ($a['uncovered'] < $b['uncovered']) ? 1 : -1;
+    }
+
+    private function getTopUncoveredMethods(int $limit) : array
+    {
+        $uncovered = [];
+
         return [];
     }
 
-    private function getTopUncoveredClasses() : array 
+    private function getTopUncoveredClasses(int $limit) : array
     {
-        return [];
+        $uncovered = [];
+        foreach ($this->coverage as $key => $class) {
+            if (count($uncovered) < $limit) {
+                $uncovered[] = ['class' => $key, 'uncovered' => $class['metrics']['methods'] - $class['metrics']['coveredmethods']];
+                usort($uncovered, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortUncovered']);
+            } elseif ($uncovered[$limit - 1]['uncovered'] < $class['metrics']['methods'] - $class['metrics']['coveredmethods']) {
+                $uncovered[$limit - 1] = ['class' => $key, 'uncovered' => $class['metrics']['methods'] - $class['metrics']['coveredmethods']];
+                usort($uncovered, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortUncovered']);
+            }
+        }
+
+        return $uncovered;
     }
 
-    private function getTopCrapMethods() : array 
+    private static function sortCrap($a, $b)
     {
-        return [];
+        if ($a['crap'] == $b['crap']) {
+            return 0;
+        }
+
+        return ($a['crap'] < $b['crap']) ? 1 : -1;
     }
 
-    private function getTopCrapClasses() : array 
+    private function getTopCrapMethods(int $limit) : array
     {
-        return [];
+        $crap = [];
+        foreach ($this->coverage as $key => $class) {
+            if (isset($class['function'])) {
+                foreach ($class['function'] as $method => $crapValue) {
+                    if (count($crap) < $limit) {
+                        $crap[] = ['class' => $key, 'method' => $method, 'crap' => $crapValue['crap']];
+                        usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+                    } elseif ($crap[$limit - 1]['crap'] < $crapValue['crap']) {
+                        $crap[$limit - 1] = ['class' => $key, 'method' => $method, 'crap' => $crapValue['crap']];
+                        usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+                    }
+                }
+            }
+        }
+
+        return $crap;
     }
 
-    private function createBaseFiles() 
+    private function getTopCrapClasses(int $limit) : array
+    {
+        $crap = [];
+        foreach ($this->coverage as $key => $class) {
+            if (count($crap) < $limit) {
+                $crap[] = ['class' => $key, 'crap' => $class['metrics']['crap']];
+                usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+            } elseif ($crap[$limit - 1]['crap'] < $class['metrics']['crap']) {
+                $crap[$limit - 1] = ['class' => $key, 'crap' => $class['metrics']['crap']];
+                usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+            }
+        }
+
+        return $crap;
+    }
+
+    private function createBaseFiles()
     {
         $coverageView = new CoverageView();
         $coverageView->setTemplate('/Documentor/src/Theme/coverage');
         $coverageView->setBase($this->destination);
         $coverageView->setPath($this->destination . '/coverage' . '.html');
+        $coverageView->setTitle('Coverage');
         $coverageView->setClasses(count($this->coverage));
         $coverageView->setCoveredClasses($this->countCoveredClasses());
         $coverageView->setMethods($this->countMethods());
         $coverageView->setCoveredMethods($this->countCoveredMethods());
         $coverageView->setSection('Coverage');
-        $coverageView->setTopUncoveredMethods($this->getTopUncoveredMethods());
-        $coverageView->setTopUncoveredClasses($this->getTopUncoveredClasses());
-        $coverageView->setTopCrapMethods($this->getTopCrapMethods());
-        $coverageView->setTopCrapClasses($this->getTopCrapClasses());
+        $coverageView->setTopUncoveredMethods($this->getTopUncoveredMethods(15));
+        $coverageView->setTopUncoveredClasses($this->getTopUncoveredClasses(5));
+        $coverageView->setTopCrapMethods($this->getTopCrapMethods(15));
+        $coverageView->setTopCrapClasses($this->getTopCrapClasses(15));
+        $coverageView->setComplexity($this->totalComplexity);
+        $coverageView->setCrap($this->totalCrap);
 
         $this->outputRender($coverageView);
     }
