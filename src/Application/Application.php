@@ -2,6 +2,7 @@
 
 namespace Documentor\src\Application;
 
+use Documentor\src\Application\Controllers\MainController;
 use Documentor\src\Application\Controllers\ClassController;
 use Documentor\src\Application\Controllers\CodeCoverageController;
 use Documentor\src\Application\Controllers\UnitTestController;
@@ -23,11 +24,11 @@ class Application
         $codeCoverage = ArrayUtils::getArg('-c', $argv);
         $sources      = new Directory($source, '*');
 
+        $this->mainVController        = new MainController($destination);
         $this->codeCoverageController = new CodeCoverageController($destination, $codeCoverage);
-        $this->unitTestController     = new UnitTestController($destination);
+        $this->unitTestController     = new UnitTestController($destination, $unitTest);
         $this->classController        = new ClassController($destination, $this->codeCoverageController, $this->unitTestController);
 
-        $this->unitTestController->parse($unitTest);
         $this->parse($sources);
         $this->classController->createTableOfContents();
         $this->classController->createSearchSet();

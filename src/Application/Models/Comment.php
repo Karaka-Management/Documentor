@@ -133,7 +133,7 @@ class Comment
                 break;
             }
 
-            if ($line !== '' && $description !== '') {
+            if ($line !== '') {
                 $description .= htmlspecialchars($line) . "\n";
             }
         }

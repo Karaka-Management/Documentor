@@ -17,7 +17,6 @@ class ClassController
 	private $destination = '';
 	private $codeCoverage = null;
 	private $unitTest = null;
-	private $toc = [];
 	private $files = [];
 	private $loc = [];
 
@@ -57,7 +56,6 @@ class ClassController
 		$tocView->setTemplate('/Documentor/src/Theme/tableOfContents');
 		$tocView->setTitle('Table of Contents');
 		$tocView->setSection('Documentation');
-		$tocView->setTableOfContents($this->toc);
 
 		$this->outputRender($tocView);
 	}
@@ -76,7 +74,6 @@ class ClassController
 			$className = str_replace('/', '\\', $className);
 			$class = new \ReflectionClass($className);
 
-			$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, [], '\\');
 			$this->files[] = [$class->getName(), $class->getShortName()];
 			$outPath = $this->destination . '/' . str_replace('\\', '/', $class->getName());
 
@@ -93,7 +90,6 @@ class ClassController
 
 			$methods = $class->getMethods();
 			foreach($methods as $method) {
-				$this->toc = ArrayUtils::setArray($class->getName(), $this->toc, $method->getShortName(), '\\');
 				$this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $class->getName());
 				$this->files[] = [$class->getName() . '-' . $method->getShortName(), $class->getShortName() . '-' . $method->getShortName()];
 			}

@@ -6,9 +6,9 @@ use phpOMS\Views\ViewAbstract;
 
 class BaseView extends ViewAbstract
 {
-    private $title = '';
+    protected $title = '';
 
-    private $section = '';
+    protected $section = '';
 
     public function getSection()
     {

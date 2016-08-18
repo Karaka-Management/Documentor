@@ -234,12 +234,50 @@ table {
 
 }
 
+table caption {
+    padding: 10px;
+    border: 1px solid #dddddd;
+    white-space: nowrap;
+    background: #f4f4f4;
+    border-bottom: none;
+}
+
 th {
     background: #f4f4f4;
+}
+
+tbody th {
+    text-align: left;
 }
 
 th, td {
     padding: 10px;
     border: 1px solid #dddddd;
     white-space: nowrap;
+}
+
+ul {
+    list-style: none;
+}
+
+ul input:checked + ul {
+    display: none;
+}
+
+ul input {
+    display: none;
+}
+
+ul label {
+    cursor: pointer;
+    color : #000;
+}
+
+.floatLeft {
+    float: left;
+    margin-right: 10px;
+}
+
+.clear {
+    clear: both;
 }
