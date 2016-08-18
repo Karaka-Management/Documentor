@@ -31,7 +31,7 @@ class CodeCoverageController
 
     private function parse(string $path)
     {
-        $dom = new \DOMDocument;
+        $dom = new \DOMDocument();
         $dom->loadXML(file_get_contents($path));
         $files = $dom->getElementsByTagName('file');
 
