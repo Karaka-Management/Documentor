@@ -10,6 +10,10 @@ class CoverageView extends BaseView
 	protected $coveredMethods = 0;
 	protected $complexity = 0;
 	protected $crap = 0.0;
+	protected $uncoveredClasses = [];
+	protected $uncoveredMethods = [];
+	protected $crapClasses = [];
+	protected $crapMethods = [];
 
 	public function setClasses(int $amount)
 	{
@@ -40,4 +44,24 @@ class CoverageView extends BaseView
 	{
 		$this->crap = $crap;
 	}
+
+	private setTopUncoveredMethods(array $methods) 
+    {
+        $this->uncoveredMethods = $methods;
+    }
+
+    private setTopUncoveredClasses(array $classes) 
+    {
+        $this->uncoveredClasses = $classes;
+    }
+
+    private setTopCrapMethods(array $methods) 
+    {
+        $this->crapMethods = $methods;
+    }
+
+    private setTopCrapClasses(array $classes) 
+    {
+        $this->crapClasses = $classes;
+    }
 }

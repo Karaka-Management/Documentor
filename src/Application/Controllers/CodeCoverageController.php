@@ -107,6 +107,26 @@ class CodeCoverageController
         return $count;
     }
 
+    private function getTopUncoveredMethods() : array 
+    {
+        return [];
+    }
+
+    private function getTopUncoveredClasses() : array 
+    {
+        return [];
+    }
+
+    private function getTopCrapMethods() : array 
+    {
+        return [];
+    }
+
+    private function getTopCrapClasses() : array 
+    {
+        return [];
+    }
+
     private function createBaseFiles() 
     {
         $coverageView = new CoverageView();
@@ -118,6 +138,10 @@ class CodeCoverageController
         $coverageView->setMethods($this->countMethods());
         $coverageView->setCoveredMethods($this->countCoveredMethods());
         $coverageView->setSection('Coverage');
+        $coverageView->setTopUncoveredMethods($this->getTopUncoveredMethods());
+        $coverageView->setTopUncoveredClasses($this->getTopUncoveredClasses());
+        $coverageView->setTopCrapMethods($this->getTopCrapMethods());
+        $coverageView->setTopCrapClasses($this->getTopCrapClasses());
 
         $this->outputRender($coverageView);
     }
