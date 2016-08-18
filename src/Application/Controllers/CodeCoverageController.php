@@ -43,6 +43,7 @@ class CodeCoverageController
                         'complexity' => 0,
                         'methods' => 0,
                         'coveredmethods' => 0,
+                        'crap' => 0.0,
                     ]
                 ];
 
@@ -60,6 +61,8 @@ class CodeCoverageController
                         if(!isset($this->coverage[$class]['function'])) {
                             $this->coverage[$class]['function'] = [];
                         }
+
+                        $this->coverage[$class]['metrics']['crap'] += (float) $line->getAttribute('crap');
 
                         $this->coverage[$class]['function'][$line->getAttribute('name')] = [
                             'complexity' => (int) $line->getAttribute('complexity'),
