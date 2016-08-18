@@ -45,22 +45,22 @@ class CoverageView extends BaseView
 		$this->crap = $crap;
 	}
 
-	private setTopUncoveredMethods(array $methods) 
+	public function setTopUncoveredMethods(array $methods) 
     {
         $this->uncoveredMethods = $methods;
     }
 
-    private setTopUncoveredClasses(array $classes) 
+    public function setTopUncoveredClasses(array $classes) 
     {
         $this->uncoveredClasses = $classes;
     }
 
-    private setTopCrapMethods(array $methods) 
+    public function setTopCrapMethods(array $methods) 
     {
         $this->crapMethods = $methods;
     }
 
-    private setTopCrapClasses(array $classes) 
+    public function setTopCrapClasses(array $classes) 
     {
         $this->crapClasses = $classes;
     }
