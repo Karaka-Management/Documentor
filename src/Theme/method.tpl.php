@@ -7,16 +7,16 @@
 <?php $params = $this->getComment()->getParameters(); if(!empty($params)) : ?>
 <h2>Parameters</h2>
 <?php foreach($params as $param) : ?>
-    <?= $param['type']; ?> <?= $param['var']; ?> <?= $param['desc']; ?>
+    <p><?= $this->formatType($param['type']); ?> <?= $this->formatVariable($param['var']); ?>: <?= $param['desc']; ?></p>
 <?php endforeach; endif; ?>
 <?php $return = $this->getComment()->getReturn(); if($this->ref->hasReturnType() || isset($return)) : ?>
 <h2>Return</h2>
-<p><?= $this->ref->hasReturnType() ? $this->ref->getReturnType() : $return; ?></p>
+<p><?= $this->ref->hasReturnType() ? $this->formatType($this->ref->getReturnType()) : $this->formatType($return); ?></p>
 <?php endif; ?>
 <?php $throws = $this->getComment()->getThrows(); if(!empty($throws)) : ?>
 <h2>Throws</h2>
 <?php foreach($throws as $throw) : ?>
-    <?= $throw['type']; ?> <?= $throw['desc']; ?>
+    <p><?= $this->formatType($throw['type']); ?>: <?= $throw['desc']; ?><p>
 <?php endforeach; endif; ?>
 <h2>Tests</h2>
 <h3>Complexity</h3>
