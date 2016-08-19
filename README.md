@@ -53,3 +53,21 @@ The following key words hold special meaning in the code documentation.
 * @uses
 * @see
 * @deprecated
+
+### Preview
+
+Coverage
+
+![alt tag](http://url/to/img.png)
+
+Tests
+
+![alt tag](http://url/to/img.png)
+
+Class documentation
+
+![alt tag](http://url/to/img.png)
+
+Method documentation
+
+![alt tag](http://url/to/img.png)
