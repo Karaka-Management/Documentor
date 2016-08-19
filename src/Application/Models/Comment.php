@@ -4,23 +4,24 @@ namespace Documentor\src\Application\Models;
 
 class Comment
 {
-    private $version = '';
+    private $version = null;
     private $php = 'PHP 7.1';
-    private $description = '';
-    private $license = '';
-    private $var = '';
-    private $package = '';
-    private $category = '';
-    private $since = '';
-    private $deprecated = '';
-    private $todo = '';
-    private $author = '';
-    private $link = '';
+    private $description = null;
+    private $license = null;
+    private $var = null;
+    private $package = null;
+    private $category = null;
+    private $since = null;
+    private $deprecated = null;
+    private $todo = null;
+    private $author = null;
+    private $link = null;
     private $param = [];
-    private $throws = '';
-    private $return = '';
-    private $title = '';
-    private $latex = '';
+    private $throws = null;
+    private $return = null;
+    private $title = null;
+    private $latex = null;
+    private $example = [];
     private $empty = true;
 
     public function __construct(string $comment)
@@ -30,42 +31,42 @@ class Comment
         $this->parse($comment);
     }
 
-    public function getDescription() : string
+    public function getDescription()
     {
         return $this->description;
     }
 
-    public function getLicense() : string
+    public function getLicense()
     {
         return $this->license;
     }
 
-    public function getVar() : string
+    public function getVar()
     {
         return $this->var;
     }
 
-    public function getLatex() : string
+    public function getLatex()
     {
         return $this->latex;
     }
 
-    public function getAuthor() : string
+    public function getAuthor()
     {
         return $this->author;
     }
 
-    public function getSince() : string
+    public function getSince()
     {
         return $this->since;
     }
 
-    public function getReturn() : string
+    public function getReturn()
     {
         return $this->return;
     }
 
-    public function getThrows() : string
+    public function getThrows()
     {
         return $this->throws;
     }
@@ -80,53 +81,67 @@ class Comment
         return $this->empty;
     }
 
+    public function isDeprecated() : bool
+    {
+        return $this->deprecated;
+    }
+
+    public function getExamples() : array
+    {
+        return $this->example;
+    }
+
     private function parse(string $comment)
     {
-        $this->license    = $this->findKey('@license', $comment);
-        $this->var        = $this->findKey('@var', $comment);
-        $this->package    = $this->findKey('@package', $comment);
-        $this->category   = $this->findKey('@category', $comment);
-        $this->since      = $this->findKey('@since', $comment);
-        $this->deprecated = $this->findKey('@deprecated', $comment);
-        $this->todo       = $this->findKey('@todo', $comment);
-        $this->author     = $this->findKey('@author', $comment);
-        $this->link       = $this->findKey('@link', $comment);
-        $this->throws     = $this->findKey('@throws', $comment);
-        $this->return     = $this->findKey('@return', $comment);
-        $this->version    = $this->findKey('@version', $comment);
-        $this->latex      = $this->findKey('@latex', $comment);
+        $this->license    = $this->findKey('@license', $comment)[0] ?? null;
+        $this->var        = $this->findKey('@var', $comment)[0] ?? null;
+        $this->package    = $this->findKey('@package', $comment)[0] ?? null;
+        $this->category   = $this->findKey('@category', $comment)[0] ?? null;
+        $this->since      = $this->findKey('@since', $comment)[0] ?? null;
+        $this->deprecated = isset($this->findKey('@deprecated', $comment)[0]);
+        $this->todo       = $this->findKey('@todo', $comment)[0] ?? null;
+        $this->author     = $this->findKey('@author', $comment)[0] ?? null;
+        $this->link       = $this->findKey('@link', $comment)[0] ?? null;
+        $this->return     = $this->findKey('@return', $comment)[0] ?? null;
+        $this->version    = $this->findKey('@version', $comment)[0] ?? null;
+        $this->latex      = $this->findKey('@latex', $comment)[0] ?? null;
+        $this->example    = $this->findKey('@example', $comment);
 
         $this->param       = $this->parseParameter($comment);
         $this->description = $this->parseDescription($comment);
+        $this->throws      = $this->parseThrows($comment);
 
         $this->empty = empty(trim ('\\ *', $comment);
     }
 
-    private function findKey(string $key, string $comment) : string
+    private function findKey(string $key, string $comment) : array
     {
-        $pos = strpos($comment, $key);
+        $matches = [];
+        while(($pos = strpos($comment, $key)) !== false) {
+            $match = trim(substr($comment, $pos + strlen($key), (strpos($comment, "\n", $pos + strlen($key))) - $pos - strlen($key)));
 
-        if ($pos === false) {
-            return '';
-        }
+            if (isset($match[0]) && $match[0] === '`') {
+                $start = strpos($comment, '`', $pos);
+                $end   = strpos($comment, '`', $start + 1);
 
-        $match = trim(substr($comment, $pos + strlen($key), (strpos($comment, "\n", $pos + strlen($key))) - $pos - strlen($key)));
+                $match = substr($comment, $start + 1, $end - $start - 2);
+                $lines = explode("\n", $match);
 
-        if (isset($match[0]) && $match[0] === '`') {
-            $start = strpos($comment, '`', $pos);
-            $end   = strpos($comment, '`', $start + 1);
+                foreach ($lines as $key => $line) {
+                    $lines[$key] = trim($line, ' *');
+                }
 
-            $match = substr($comment, $start + 1, $end - $start - 2);
-            $lines = explode("\n", $match);
-
-            foreach ($lines as $key => $line) {
-                $lines[$key] = trim($line, ' *');
+                $match = implode(' ', $lines);
             }
 
-            $match = implode(' ', $lines);
+            $match = trim($match);
+
+            if(!empty($match)) {
+                $matches[] = $match;
+            }
         }
 
-        return trim($match);
+        return $matches;
     }
 
     private function parseDescription(string $comment) : string
@@ -153,21 +168,40 @@ class Comment
     {
         $params = $this->findKey('@param', $comment);
         $params = preg_replace('!\s+!', ' ', $params);
+        $parsed = [];
 
-        if ($params === '') {
-            return [];
-        }
+        foreach($params as $param) {
+            $param = explode(' ', $param);
 
-        $params = explode(' ', $params);
-
-        if (count($params) < 3) {
-            return [];
-        }
-
-        return [[
+            if (count($param) > 2) {
+                $parsed[] = [
                     'type' => array_shift($params),
                     'var'  => array_shift($params),
                     'desc' => implode(' ', $params),
-                ]];
+                ];
+            }
+        }
+
+        return $parsed;
+    }
+
+    private function parseThrows(string $comment) : array
+    {
+        $throws = $this->findKey('@throws', $comment);
+        $throws = preg_replace('!\s+!', ' ', $throws);
+        $parsed = [];
+
+        foreach($throws as $throw) {
+            $throw = explode(' ', $throw);
+
+            if (count($throw) > 1) {
+                $parsed[] = [
+                    'type' => array_shift($throws),
+                    'desc' => implode(' ', $throws),
+                ];
+            }
+        }
+
+        return $parsed;
     }
 }

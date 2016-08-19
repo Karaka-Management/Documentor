@@ -285,3 +285,8 @@ ul label {
 .full {
     width: 100%;
 }
+
+.deprecated {
+    font-weight: bold;
+    font-color: #ff0000;
+}
