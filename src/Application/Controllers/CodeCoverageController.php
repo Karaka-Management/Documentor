@@ -214,5 +214,6 @@ class CodeCoverageController
         $coverageView->setComplexity($this->totalComplexity);
         $coverageView->setCrap($this->totalCrap);
 
+        File::put($coverageView->getPath(), $coverageView->render());
     }
 }
