@@ -49,6 +49,7 @@ class GuideController
                 $guideView->setSection('Guide');
                 $guideView->setTitle('Guide');
                 $guideView->setNavigation($this->nav);
+                $guideView->setContent(file_get_contents($file->getPath()))
 
                 $this->outputRender($guideView);
             }
