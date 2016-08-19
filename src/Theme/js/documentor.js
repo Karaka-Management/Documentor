@@ -12,10 +12,10 @@
         if (n == 0) return m;
         if (m == 0) return n;
 
-        if(s == t) return 0;
-        if(s.indexOf(t) !== -1 || t.indexOf(s) !== -1) return 1;
-        if(s.startsWith(t) || t.startsWith(s)) return 2;
-        if(s.endsWith(t) || t.endsWith(s)) return 2;
+        if (s == t) return 0;
+        if (s.indexOf(t) !== -1 || t.indexOf(s) !== -1) return 1;
+        if (s.startsWith(t) || t.startsWith(s)) return 2;
+        if (s.endsWith(t) || t.endsWith(s)) return 2;
 
         //Create an array of arrays in javascript (a descending loop is quicker)
         for (let i = n; i >= 0; i--) d[i] = [];
@@ -34,13 +34,13 @@
                 //Check the jagged ld total so far
                 if (i == j && d[i][j] > 4) return n;
 
-                let t_j = t.charAt(j - 1);
+                let t_j  = t.charAt(j - 1);
                 let cost = (s_i == t_j) ? 0 : 1; // Step 5
 
                 //Calculate the minimum
                 let mi = d[i - 1][j] + 1;
-                let b = d[i][j - 1] + 1;
-                let c = d[i - 1][j - 1] + cost;
+                let b  = d[i][j - 1] + 1;
+                let c  = d[i - 1][j - 1] + cost;
 
                 if (b < mi) mi = b;
                 if (c < mi) mi = c;
@@ -58,7 +58,7 @@
         return d[n][m];
     }
 
-    function sortBestLefenshtein(a, b) 
+    function sortBestLefenshtein(a, b)
     {
         return a[0] - b[0];
     }
@@ -81,10 +81,10 @@
         for (let i = 0; i < length; i++) {
             match = levenshteinDistance(this.value.toLowerCase(), searchDataset[i][1].toLowerCase());
 
-            if(matches.length > 9 && matches[matches.length - 1][0] > match) {
+            if (matches.length > 9 && matches[matches.length - 1][0] > match) {
                 matches[matches.length - 1] = [match, searchDataset[i], this.value];
                 matches.sort(sortBestLefenshtein);
-            } else if(matches.length < 10) {
+            } else if (matches.length < 10) {
                 matches.push([match, searchDataset[i], this.value]);
                 matches.sort(sortBestLefenshtein);
             }
@@ -92,9 +92,9 @@
 
         result.innerHTML = '';
 
-        length = matches.length;
-        let li = null,
-            a = null,
+        length  = matches.length;
+        let li  = null,
+            a   = null,
             out = null;
         for (let i = 0; i < length; i++) {
             out = matches[i][1][0].split('\\');

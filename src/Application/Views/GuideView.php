@@ -7,7 +7,7 @@ class GuideView extends BaseView
     protected $nav = [];
     protected $content = '';
 
-    public function setContent(string $content) 
+    public function setContent(string $content)
     {
         $this->content = $content;
     }
@@ -26,11 +26,11 @@ class GuideView extends BaseView
     {
         $navString = '<ul>';
 
-        foreach($nav as $key => $element) {
-            if(!isset($element['name'])) {
+        foreach ($nav as $key => $element) {
+            if (!isset($element['name'])) {
                 $navString .= '<li><a href="">' . $key . '</a>' . $this->generateNavigation($element);
             } else {
-                $navString .= '<li><a href="'. $this->base . '/guide' . $element['path'] . '/' . $element['name'] . '.html">' . str_replace('_', ' ', $element['name']) . '</a>';
+                $navString .= '<li><a href="' . $this->base . '/guide' . $element['path'] . '/' . $element['name'] . '.html">' . str_replace('_', ' ', $element['name']) . '</a>';
             }
         }
 

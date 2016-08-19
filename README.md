@@ -1,6 +1,6 @@
 # What is the documentor
 
-This documentation generator creates a html documentation based on the comments provided for classes, interfaces, traits, methods, variables etc. The generated output is html, css and js and can be styled with custom themes as desired.
+This documentation generator creates a html documentation for php classes based on the comments provided for classes, interfaces, traits, methods, variables etc. The generated output is html, css and js and can be styled with custom themes as desired.
 
 ## Requirements
 
@@ -27,6 +27,8 @@ php Documentor/src/index.php -s <SOURCE_PATH> -d <DESTINATION_PATH> -c <COVERAGE
 * `-s` Source directory
 * `-d` Destination directory
 * `-c` Code coverage source (`coverage-clover`)
+* `-u` Unit test log (`junit` style)
+* `-g` Html guide source
 
 ## Supported Key Words
 

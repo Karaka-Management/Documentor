@@ -32,12 +32,12 @@ class DocView extends BaseView
         $this->comment = $comment;
     }
 
-    public function setCode(string $code) 
+    public function setCode(string $code)
     {
-        $trim = StringUtils::countCharacterFromStart($code, ' ');
+        $trim  = StringUtils::countCharacterFromStart($code, ' ');
         $lines = explode("\n", $code);
 
-        foreach($lines as $key => $line) {
+        foreach ($lines as $key => $line) {
             $lines[$key] = substr($line, $trim);
         }
 
@@ -100,7 +100,7 @@ class DocView extends BaseView
     protected function getPercentage($value) : int
     {
         $min = !isset($this->coverage['complexity']) || $this->coverage['complexity'] < 1 ? -8 : $this->coverage['complexity'];
-        $out = (int) (100 / (1 + exp(-log($min/50))));
+        $out = (int) (100 / (1 + exp(-log($min / 50))));
 
         return $out < 1 ? 1 : $out;
     }

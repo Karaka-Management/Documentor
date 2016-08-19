@@ -163,7 +163,7 @@ pre {
     color: #936;
 }
 
-.type, .className  {
+.type, .className {
     color: #693;
 }
 
@@ -233,7 +233,7 @@ a .type, a .variable {
 
 table {
     border-spacing: 0;
-    border-collapse: collapse; 
+    border-collapse: collapse;
     width: 1%;
     margin: 10px 0 10px 0;
 }
@@ -274,7 +274,7 @@ ul input {
 
 ul label {
     cursor: pointer;
-    color : #000;
+    color: #000;
 }
 
 .floatLeft {
