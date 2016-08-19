@@ -3,7 +3,7 @@
 namespace Documentor\src\Application;
 
 use Documentor\src\Application\Controllers\MainController;
-use Documentor\src\Application\Controllers\ClassController;
+use Documentor\src\Application\Controllers\DocumentationController;
 use Documentor\src\Application\Controllers\CodeCoverageController;
 use Documentor\src\Application\Controllers\UnitTestController;
 use phpOMS\System\File\Directory;
@@ -12,9 +12,10 @@ use phpOMS\Utils\StringUtils;
 
 class Application
 {
-    private $classController = null;
+    private $DocumentationController = null;
     private $codeCoverageController = null;
     private $unitTestController = null;
+    private $guideController = null;
 
     public function __construct(array $argv)
     {
@@ -33,16 +34,18 @@ class Application
     {
         $unitTest     = ArrayUtils::getArg('-u', $argv);
         $codeCoverage = ArrayUtils::getArg('-c', $argv);
+        $guide        = ArrayUtils::getArg('-g', $argv);
         $sources      = new Directory($source, '*');
 
         $this->mainVController        = new MainController($destination);
         $this->codeCoverageController = new CodeCoverageController($destination, $codeCoverage);
         $this->unitTestController     = new UnitTestController($destination, $unitTest);
-        $this->classController        = new ClassController($destination, $this->codeCoverageController, $this->unitTestController);
+        $this->docController          = new DocumentationController($destination, $this->codeCoverageController, $this->unitTestController);
+        $this->guideController        = new GuideController($destination, $guide);
 
         $this->parse($sources);
-        $this->classController->createTableOfContents();
-        $this->classController->createSearchSet();
+        $this->docController->createTableOfContents();
+        $this->docController->createSearchSet();
     }
 
     private function printUsage() 
@@ -59,7 +62,7 @@ class Application
             if ($source instanceof Directory) {
                 $this->parse($source);
             } elseif (StringUtils::endsWith($source->getPath(), '.php')) {
-                $this->classController->parse($source);
+                $this->docController->parse($source);
             }
         }
     }

@@ -12,7 +12,7 @@ use phpOMS\System\File\File;
 use phpOMS\Utils\ArrayUtils;
 use phpOMS\Views\ViewAbstract;
 
-class ClassController
+class DocumentationController
 {
 	private $destination = '';
 	private $codeCoverage = null;
@@ -53,9 +53,9 @@ class ClassController
 	public function createTableOfContents() 
 	{
 		$tocView = new TableOfContentsView();
-		$tocView->setPath($this->destination . '/tableOfContents' . '.html');
+		$tocView->setPath($this->destination . '/documentation' . '.html');
 		$tocView->setBase($this->destination);
-		$tocView->setTemplate('/Documentor/src/Theme/tableOfContents');
+		$tocView->setTemplate('/Documentor/src/Theme/documentation');
 		$tocView->setTitle('Table of Contents');
 		$tocView->setSection('Documentation');
 		$tocView->setStats($this->stats);

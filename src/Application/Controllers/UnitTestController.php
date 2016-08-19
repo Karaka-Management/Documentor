@@ -17,7 +17,7 @@ class UnitTestController
     {
         $this->destination = $destination;
 
-        if(!isset($path)) {
+        if(isset($path)) {
             $this->parse($path);
         }
         
