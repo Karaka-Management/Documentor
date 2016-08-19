@@ -16,25 +16,39 @@ class GuideController
         $this->destination = $destination; 
 
         if(isset($path)) {
-            $this->parse(new Directory($path), $path);
+            $dir = new Directory($path);
+            $this->nav = $this->createNavigation($dir, $path);
+            $this->parse($dir, $path);
         }
+    }
+
+    private function createNavigation(Directory $dirs, string $base) : array
+    {
+        $nav = [];
+        foreach($dirs as $file) {
+            if($file instanceof Directory) {
+                $nav[$file->getName()] = $this->parse($file, $base);
+            } elseif($file instanceof File) {
+                $nav[$file->getDirName()] = ['path' => substr($file->getDirPath(), strlen($base)), 'name' => $file->getName()];
+            }
+        }
+
+        return $nav;
     }
 
     private function parse(Directory $dirs, string $base) 
     {
         foreach($dirs as $file) {
             if($file instanceof Directory) {
-                $this->nav[$file->getName()] = [];
                 $this->parse($file, $base);
             } elseif($file instanceof File) {
-                $this->nav[$file->getDirName()] = ['path' => substr($file->getDirPath(), strlen($base)), 'name' => $file->getName()];
-
-                $guideView = new BaseView();
+                $guideView = new GuideView();
                 $guideView->setTemplate('/Documentor/src/Theme/guide');
                 $guideView->setBase($this->destination);
                 $guideView->setPath($this->destination . substr($file->getDirPath(), strlen($base)) . '/index' . '.html');
                 $guideView->setSection('Guide');
                 $guideView->setTitle('Guide');
+                $guideView->setNavigation($this->nav);
 
                 $this->outputRender($guideView);
             }
