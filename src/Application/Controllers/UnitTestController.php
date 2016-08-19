@@ -80,7 +80,7 @@ class UnitTestController
 
     private function outputRender(ViewAbstract $view)
     {
-        Directory::createPath(dirname($view->getPath()), '0644', true);
+        Directory::create(dirname($view->getPath()), '0644', true);
         file_put_contents($view->getPath(), $view->render());
     }
 }
