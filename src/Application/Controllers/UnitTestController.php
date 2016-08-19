@@ -13,11 +13,14 @@ class UnitTestController
     private $test = [];
     private $testResults = ['errors' => [], 'failures' => []];
 
-    public function __construct(string $destination, string $path)
+    public function __construct(string $destination, string $path = null)
     {
         $this->destination = $destination;
 
-        $this->parse($path);
+        if(!isset($path)) {
+            $this->parse($path);
+        }
+        
         $this->createBaseFiles();
     }
 

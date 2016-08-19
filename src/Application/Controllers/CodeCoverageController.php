@@ -13,11 +13,14 @@ class CodeCoverageController
     private $totalCrap = 0;
     private $totalComplexity = 0;
 
-    public function __construct(string $destination, string $path)
+    public function __construct(string $destination, string $path = null)
     {
         $this->destination = $destination;
 
-        $this->parse($path);
+        if(!isset($path)) {
+            $this->parse($path);
+        }
+        
         $this->createBaseFiles();
     }
 
