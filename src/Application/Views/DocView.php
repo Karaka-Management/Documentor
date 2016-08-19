@@ -8,7 +8,6 @@ class DocView extends BaseView
 {
     protected $ref = null;
     protected $base = '';
-    protected $test = [];
     protected $comment = null;
     protected $coverage = [];
     private $path = '';
@@ -37,11 +36,6 @@ class DocView extends BaseView
     public function setCode(string $code) 
     {
     	$this->code = $code;
-    }
-
-    public function setTest(array $test)
-    {
-        $this->test = $test;
     }
 
     public function setCoverage(array $coverage)

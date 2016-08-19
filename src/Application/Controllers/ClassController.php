@@ -19,6 +19,8 @@ class ClassController
 	private $unitTest = null;
 	private $files = [];
 	private $loc = [];
+	private $stats = ['loc' => 0, 'classes' => 0, 'traits' => 0, 'interfaces' => 0, 'abstracts' => 0];
+	private $withoutComment = [];
 
 	public function __construct(string $destination, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
 	{
@@ -56,6 +58,8 @@ class ClassController
 		$tocView->setTemplate('/Documentor/src/Theme/tableOfContents');
 		$tocView->setTitle('Table of Contents');
 		$tocView->setSection('Documentation');
+		$tocView->setStats($this->stats);
+		$tocView->setWithoutComment($this->withoutComment);
 
 		$this->outputRender($tocView);
 	}
@@ -69,6 +73,7 @@ class ClassController
 			include_once $path;
 
 			$this->loc = file($path);
+			$this->stats['loc'] += count($this->loc);
 
 			$className = substr($path, strlen(realpath(__DIR__ . '/../../../../')), -4);
 			$className = str_replace('/', '\\', $className);
@@ -83,9 +88,18 @@ class ClassController
 			$classView->setTitle($class->getShortName());
 			$classView->setSection('Documentation');
 
+			if($class->isInterface()) {
+				$this->stats['interfaces']++;
+			} elseif($class->isTrait()) {
+				$this->stats['traits']++;
+			} elseif($class->isAbstract()) {
+				$this->stats['abstracts']++;
+			} elseif($class->isUserDefined()) {
+				$this->stats['classes']++;
+			}
+
 			$classView->setReflection($class);
 			$classView->setComment(new Comment($class->getDocComment()));
-			$classView->setTest([]);
 			$classView->setCoverage($this->codeCoverage->getClass($class->getName()) ?? []);
 
 			$methods = $class->getMethods();
@@ -130,6 +144,10 @@ class ClassController
 		$methodView->setTitle($method->getDeclaringClass()->getShortName() . ' ~ ' . $method->getShortName());
 		$methodView->setSection('Documentation');
 		$methodView->setCode(implode('', array_slice($this->loc, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1)));
+
+		if($comment->isEmpty()) {
+			$this->withoutComment[] = $className . '-' . $method->getShortName();
+		}
 
 		$this->outputRender($methodView);
 	}

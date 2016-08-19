@@ -21,6 +21,7 @@ class Comment
     private $return = '';
     private $title = '';
     private $latex = '';
+    private $empty = true;
 
     public function __construct(string $comment)
     {
@@ -74,6 +75,11 @@ class Comment
         return $this->param;
     }
 
+    public function isEmpty() : bool
+    {
+        return $this->empty;
+    }
+
     private function parse(string $comment)
     {
         $this->license    = $this->findKey('@license', $comment);
@@ -92,6 +98,8 @@ class Comment
 
         $this->param       = $this->parseParameter($comment);
         $this->description = $this->parseDescription($comment);
+
+        $this->empty = empty(trim ('\\ *', $comment);
     }
 
     private function findKey(string $key, string $comment) : string
