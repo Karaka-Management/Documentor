@@ -8,10 +8,8 @@ use phpOMS\Utils\StringUtils;
 class DocView extends BaseView
 {
     protected $ref = null;
-    protected $base = '';
     protected $comment = null;
     protected $coverage = [];
-    private $path = '';
     protected $code = '';
 
     public function __construct()

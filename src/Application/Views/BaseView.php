@@ -7,7 +7,8 @@ use phpOMS\Views\ViewAbstract;
 class BaseView extends ViewAbstract
 {
     protected $title = '';
-
+    protected $base = '';
+    protected $path = '';
     protected $section = '';
 
     public function getSection()

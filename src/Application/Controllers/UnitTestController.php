@@ -3,24 +3,23 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\TestView;
-use phpOMS\System\File\Directory;
-use phpOMS\Views\ViewAbstract;
+use phpOMS\System\File\File;
 
 
 class UnitTestController
 {
     private $destination = '';
-    private $test = [];
+    private $test = ['tests' => 0, 'assertions' => 0, 'failures' => 0, 'errors' => 0, 'empty' => 0, 'time' => 0];
     private $testResults = ['errors' => [], 'failures' => []];
 
     public function __construct(string $destination, string $path = null)
     {
         $this->destination = $destination;
 
-        if(isset($path)) {
+        if (isset($path)) {
             $this->parse($path);
         }
-        
+
         $this->createBaseFiles();
     }
 
@@ -75,12 +74,6 @@ class UnitTestController
         $testView->setTest($this->test);
         $testView->setResults($this->testResults);
 
-        $this->outputRender($testView);
-    }
-
-    private function outputRender(ViewAbstract $view)
-    {
-        Directory::create(dirname($view->getPath()), '0644', true);
-        file_put_contents($view->getPath(), $view->render());
+        File::put($testView->getPath(), $testView->render());
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Documentor\src\Application;
 
-use Documentor\src\Application\Controllers\MainController;
-use Documentor\src\Application\Controllers\DocumentationController;
 use Documentor\src\Application\Controllers\CodeCoverageController;
+use Documentor\src\Application\Controllers\DocumentationController;
+use Documentor\src\Application\Controllers\GuideController;
+use Documentor\src\Application\Controllers\MainController;
 use Documentor\src\Application\Controllers\UnitTestController;
 use phpOMS\System\File\Directory;
 use phpOMS\Utils\ArrayUtils;
@@ -12,18 +13,19 @@ use phpOMS\Utils\StringUtils;
 
 class Application
 {
-    private $DocumentationController = null;
+    private $docController = null;
     private $codeCoverageController = null;
     private $unitTestController = null;
     private $guideController = null;
+    private $mainController = null;
 
     public function __construct(array $argv)
     {
-        $help         = ArrayUtils::getArg('-h', $argv);
-        $source       = ArrayUtils::getArg('-s', $argv);
-        $destination  = ArrayUtils::getArg('-d', $argv);
+        $help        = ArrayUtils::getArg('-h', $argv);
+        $source      = ArrayUtils::getArg('-s', $argv);
+        $destination = ArrayUtils::getArg('-d', $argv);
 
-        if(isset($help) || !isset($source) || !isset($destination)) {
+        if (isset($help) || !isset($source) || !isset($destination)) {
             $this->printUsage();
         } else {
             $this->createDocumentation($source, $destination, $argv);
@@ -37,7 +39,7 @@ class Application
         $guide        = ArrayUtils::getArg('-g', $argv);
         $sources      = new Directory($source, '*');
 
-        $this->mainVController        = new MainController($destination);
+        $this->mainController        = new MainController($destination);
         $this->codeCoverageController = new CodeCoverageController($destination, $codeCoverage);
         $this->unitTestController     = new UnitTestController($destination, $unitTest);
         $this->docController          = new DocumentationController($destination, $this->codeCoverageController, $this->unitTestController);
@@ -48,7 +50,7 @@ class Application
         $this->docController->createSearchSet();
     }
 
-    private function printUsage() 
+    private function printUsage()
     {
         echo 'Usage: -s <SOURCE_PATH> -d <DESTINATION_PATH> -c <COVERAGE_PATH>' . "\n\n";
         echo "\t" . '-s Source path of the code to create the documentation from.' . "\n";

@@ -2,8 +2,6 @@
 
 namespace Documentor\src\Application\Views;
 
-use Reflection;
-
 class GuideView extends BaseView
 {
     protected $nav = [];
@@ -19,23 +17,23 @@ class GuideView extends BaseView
         $this->nav = $nav;
     }
 
-    public function getNavigation(array $nav) 
+    public function getNavigation() : string
     {
         return $this->generateNavigation($this->nav);
     }
 
-    private function generateNavigation(array $nav) : array 
+    private function generateNavigation(array $nav) : string
     {
-        $nav = '<ul>';
+        $navString = '<ul>';
 
-        foreach($this->nav as $key => $element) {
-            if(is_array($element)) {
-                $nav .= '<li>' . $this->getNavigation();
+        foreach($nav as $key => $element) {
+            if(!isset($element['name'])) {
+                $navString .= '<li><a href="">' . $key . '</a>' . $this->generateNavigation($element);
             } else {
-                $nav .= '<li>' . $element;
+                $navString .= '<li><a href="'. $this->base . '/guide' . $element['path'] . '/' . $element['name'] . '.html">' . str_replace('_', ' ', $element['name']) . '</a>';
             }
         }
 
-        return $nav . '</ul>'
+        return $navString . '</ul>';
     }
 }

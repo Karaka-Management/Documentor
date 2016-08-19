@@ -3,8 +3,7 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\CoverageView;
-use phpOMS\System\File\Directory;
-use phpOMS\Views\ViewAbstract;
+use phpOMS\System\File\File;
 
 class CodeCoverageController
 {
@@ -17,10 +16,10 @@ class CodeCoverageController
     {
         $this->destination = $destination;
 
-        if(isset($path)) {
+        if (isset($path)) {
             $this->parse($path);
         }
-        
+
         $this->createBaseFiles();
     }
 
@@ -215,12 +214,5 @@ class CodeCoverageController
         $coverageView->setComplexity($this->totalComplexity);
         $coverageView->setCrap($this->totalCrap);
 
-        $this->outputRender($coverageView);
-    }
-
-    private function outputRender(ViewAbstract $view)
-    {
-        Directory::create(dirname($view->getPath()), '0644', true);
-        file_put_contents($view->getPath(), $view->render());
     }
 }

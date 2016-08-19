@@ -102,7 +102,6 @@ class Comment
         $this->todo       = $this->findKey('@todo', $comment)[0] ?? null;
         $this->author     = $this->findKey('@author', $comment)[0] ?? null;
         $this->link       = $this->findKey('@link', $comment)[0] ?? null;
-        $this->return     = $this->findKey('@return', $comment)[0] ?? null;
         $this->version    = $this->findKey('@version', $comment)[0] ?? null;
         $this->latex      = $this->findKey('@latex', $comment)[0] ?? null;
         $this->example    = $this->findKey('@example', $comment);
@@ -110,14 +109,17 @@ class Comment
         $this->param       = $this->parseParameter($comment);
         $this->description = $this->parseDescription($comment);
         $this->throws      = $this->parseThrows($comment);
+        $this->return      = $this->parseReturn($comment);
 
-        $this->empty = empty(trim ('\\ *', $comment);
+        $this->empty = empty(trim($comment, '\\ *'));
     }
 
     private function findKey(string $key, string $comment) : array
     {
         $matches = [];
-        while(($pos = strpos($comment, $key)) !== false) {
+        $pos     = 0;
+
+        while (($pos = strpos($comment, $key, $pos)) !== false) {
             $match = trim(substr($comment, $pos + strlen($key), (strpos($comment, "\n", $pos + strlen($key))) - $pos - strlen($key)));
 
             if (isset($match[0]) && $match[0] === '`') {
@@ -136,12 +138,27 @@ class Comment
 
             $match = trim($match);
 
-            if(!empty($match)) {
+            if (!empty($match)) {
                 $matches[] = $match;
             }
+
+            $pos++;
         }
 
         return $matches;
+    }
+
+    private function parseReturn(string $comment)
+    {
+        $return = $this->findKey('@return', $comment)[0] ?? null;
+
+        if (!isset($return)) {
+            return null;
+        }
+
+        $return = explode(' ', $return);
+
+        return ['type' => $return[0], 'desc' => $return[1] ?? null];
     }
 
     private function parseDescription(string $comment) : string
@@ -170,14 +187,14 @@ class Comment
         $params = preg_replace('!\s+!', ' ', $params);
         $parsed = [];
 
-        foreach($params as $param) {
+        foreach ($params as $param) {
             $param = explode(' ', $param);
 
             if (count($param) > 2) {
                 $parsed[] = [
-                    'type' => array_shift($params),
-                    'var'  => array_shift($params),
-                    'desc' => implode(' ', $params),
+                    'type' => array_shift($param),
+                    'var'  => array_shift($param),
+                    'desc' => implode(' ', $param),
                 ];
             }
         }
@@ -191,13 +208,13 @@ class Comment
         $throws = preg_replace('!\s+!', ' ', $throws);
         $parsed = [];
 
-        foreach($throws as $throw) {
+        foreach ($throws as $throw) {
             $throw = explode(' ', $throw);
 
             if (count($throw) > 1) {
                 $parsed[] = [
-                    'type' => array_shift($throws),
-                    'desc' => implode(' ', $throws),
+                    'type' => array_shift($throw),
+                    'desc' => implode(' ', $throw),
                 ];
             }
         }

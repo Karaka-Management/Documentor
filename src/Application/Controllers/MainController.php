@@ -3,8 +3,7 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\BaseView;
-use phpOMS\System\File\Directory;
-use phpOMS\Views\ViewAbstract;
+use phpOMS\System\File\File;
 
 class MainController
 {
@@ -12,11 +11,11 @@ class MainController
 
     public function __construct(string $destination)
     {
-        $this->destination = $destination; 
+        $this->destination = $destination;
         $this->createBaseFiles();
     }
 
-    private function createBaseFiles() 
+    private function createBaseFiles()
     {
         $mainView = new BaseView();
         $mainView->setTemplate('/Documentor/src/Theme/index');
@@ -25,12 +24,6 @@ class MainController
         $mainView->setSection('Main');
         $mainView->setTitle('Main');
 
-        $this->outputRender($mainView);
-    }
-
-    private function outputRender(ViewAbstract $view)
-    {
-        Directory::create(dirname($view->getPath()), '0644', true);
-        file_put_contents($view->getPath(), $view->render());
+        File::put($mainView->getPath(), $mainView->render());
     }
 }
