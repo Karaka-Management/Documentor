@@ -3,7 +3,9 @@
 <p><?= $this->getComment()->isDeprecated() ? '<span class="deprecated">@deprecated</span> ' : ''; ?>@since: <?= $this->getComment()->getSince(); ?>; @author: <?= $this->getComment()->getAuthor(); ?>; @class: <?= $this->getClassLink(); ?></p>
 <h2>Function</h2>
 <pre><?= $this->getMethod(); ?></pre>
-<pre><?= $this->getComment()->getDescription(); ?></pre>
+<?php $description = $this->getComment()->getDescription(); if(!empty($description)) : ?>
+<pre><?= $description ?></pre>
+<?php endif; ?>
 <?php $params = $this->getComment()->getParameters(); if(!empty($params)) : ?>
 <h2>Parameters</h2>
 <?php foreach($params as $param) : ?>
