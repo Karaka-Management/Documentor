@@ -208,6 +208,10 @@ a .type, a .variable {
     position: relative;
 }
 
+#search {
+    padding: 5px;
+}
+
 #search-result {
     list-style-type: none;
     position: absolute;

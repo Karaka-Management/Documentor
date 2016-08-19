@@ -3,6 +3,7 @@
 namespace Documentor\src\Application\Views;
 
 use Documentor\src\Application\Models\Comment;
+use phpOMS\Utils\StringUtils;
 
 class DocView extends BaseView
 {
@@ -35,7 +36,14 @@ class DocView extends BaseView
 
     public function setCode(string $code) 
     {
-    	$this->code = $code;
+        $trim = StringUtils::countCharacterFromStart($code, ' ');
+        $lines = explode("\n", $code);
+
+        foreach($lines as $key => $line) {
+            $lines[$key] = substr($line, $trim);
+        }
+
+        $this->code = implode("\n", $lines);
     }
 
     public function setCoverage(array $coverage)
