@@ -4,7 +4,7 @@
 <h2>Function</h2>
 <pre><?= $this->getMethod(); ?></pre>
 <?php $description = $this->getComment()->getDescription(); if(!empty($description)) : ?>
-<pre><?= $description ?></pre>
+<p><?= $description ?></p>
 <?php endif; ?>
 <?php $params = $this->getComment()->getParameters(); if(!empty($params)) : ?>
 <h2>Parameters</h2>
