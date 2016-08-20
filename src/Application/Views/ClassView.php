@@ -40,7 +40,7 @@ class ClassView extends DocView
     {
         $consts = $this->ref->getConstants();
         foreach ($consts as $name => $value) {
-            yield '    ' . $this->formatVariable($name) . ' = ' . $value . ';';
+            yield '    ' . $this->formatVariable($name) . ' = ' . $this->formatValue($value) . ';';
         }
     }
 
@@ -56,7 +56,7 @@ class ClassView extends DocView
                     . ($parameter->isPassedByReference() ? '&' : '')
                     . $this->formatVariable('$' . $parameter->getName())
                     . ($parameter->isDefaultValueAvailable() ? ' = '
-                        . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : is_array($parameter->getDefaultValue()) ? '[...]' : is_null($parameter->getDefaultValue()) ? 'null' : $parameter->getDefaultValue()) : '')
+                        . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : $this->formatValue($parameter->getDefaultValue())) : '')
                     . ', ';
             }
 

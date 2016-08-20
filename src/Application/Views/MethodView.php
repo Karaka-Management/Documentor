@@ -17,7 +17,7 @@ class MethodView extends DocView
                 . ($parameter->isPassedByReference() ? '&' : '')
                 . $this->formatVariable('$' . $parameter->getName())
                 . ($parameter->isDefaultValueAvailable() ? ' = '
-                    . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : is_array($parameter->getDefaultValue()) ? '[...]' : is_null($parameter->getDefaultValue()) ? 'null' : $parameter->getDefaultValue()) : '')
+                    . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : $this->formatValue($parameter->getDefaultValue())) : '')
                 . ', ';
         }
 
