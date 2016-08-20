@@ -3,7 +3,7 @@
     "use strict";
     function levenshteinDistance(s, t)
     {
-        let d = []; //2d matrix
+        let d = [];
 
         // Step 1
         let n = s.length;
@@ -14,8 +14,6 @@
 
         if (s == t) return 0;
         if (s.indexOf(t) !== -1 || t.indexOf(s) !== -1) return 1;
-        if (s.startsWith(t) || t.startsWith(s)) return 2;
-        if (s.endsWith(t) || t.endsWith(s)) return 2;
 
         //Create an array of arrays in javascript (a descending loop is quicker)
         for (let i = n; i >= 0; i--) d[i] = [];
