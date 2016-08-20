@@ -159,7 +159,7 @@ class Comment
 
         $return = explode(' ', $return);
 
-        return ['type' => $return[0], 'desc' => $return[1] ?? null];
+        return ['type' => array_shift($return), 'desc' => implode(' ', $return) ?? null];
     }
 
     public function getDescription()
