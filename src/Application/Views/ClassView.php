@@ -32,7 +32,15 @@ class ClassView extends DocView
         $members = $this->ref->getProperties();
         foreach ($members as $member) {
             $type = new Comment($member->getDocComment());
-            yield "    " . $this->formatModifier(implode(' ', Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable($member->getName()) . ';';
+            yield '    ' . $this->formatModifier(implode(' ', Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable('$' . $member->getName()) . ';';
+        }
+    }
+
+    public function getConst()
+    {
+        $consts = $this->ref->getConstants();
+        foreach ($consts as $name => $value) {
+            yield '    ' . $this->formatVariable($name) . ' = ' . $value . ';';
         }
     }
 

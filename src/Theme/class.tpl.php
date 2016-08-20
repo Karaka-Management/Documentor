@@ -12,6 +12,7 @@
 <div class="meter orange"><span style="width: <?= $this->getCoverageRatio(); ?>%"></span></div>
 <h2>Overview</h2>
 <pre><?= $this->getTop(); ?><?= "\n{"; ?>
+<?php foreach($this->getConst() as $const) { echo "\n" . $const; } echo "\n"; ?>
 <?php foreach($this->getMembers() as $member) { echo "\n" . $member; } echo "\n"; ?>
 <?php foreach($this->getMethods() as $methods) { echo "\n" . $methods; } echo "\n}"; ?>
 </pre>
