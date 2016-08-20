@@ -8,13 +8,15 @@ use phpOMS\System\File\File;
 class CodeCoverageController
 {
     private $destination = '';
+    private $base = '';
     private $coverage = [];
     private $totalCrap = 0;
     private $totalComplexity = 0;
 
-    public function __construct(string $destination, string $path = null)
+    public function __construct(string $destination, string $base, string $path = null)
     {
         $this->destination = $destination;
+        $this->base = $base;
 
         if (isset($path)) {
             $this->parse($path);
@@ -199,7 +201,7 @@ class CodeCoverageController
     {
         $coverageView = new CoverageView();
         $coverageView->setTemplate('/Documentor/src/Theme/coverage');
-        $coverageView->setBase($this->destination);
+        $coverageView->setBase($this->base);
         $coverageView->setPath($this->destination . '/coverage' . '.html');
         $coverageView->setTitle('Coverage');
         $coverageView->setClasses(count($this->coverage));

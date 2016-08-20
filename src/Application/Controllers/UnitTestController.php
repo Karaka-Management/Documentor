@@ -5,16 +5,17 @@ namespace Documentor\src\Application\Controllers;
 use Documentor\src\Application\Views\TestView;
 use phpOMS\System\File\File;
 
-
 class UnitTestController
 {
     private $destination = '';
+    private $base = '';
     private $test = ['tests' => 0, 'assertions' => 0, 'failures' => 0, 'errors' => 0, 'empty' => 0, 'time' => 0];
     private $testResults = ['errors' => [], 'failures' => []];
 
-    public function __construct(string $destination, string $path = null)
+    public function __construct(string $destination, string $base, string $path = null)
     {
         $this->destination = $destination;
+        $this->base        = $base;
 
         if (isset($path)) {
             $this->parse($path);
@@ -67,7 +68,7 @@ class UnitTestController
     {
         $testView = new TestView();
         $testView->setTemplate('/Documentor/src/Theme/test');
-        $testView->setBase($this->destination);
+        $testView->setBase($this->base);
         $testView->setPath($this->destination . '/test' . '.html');
         $testView->setTitle('Test');
         $testView->setSection('Test');

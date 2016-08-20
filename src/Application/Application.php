@@ -28,6 +28,8 @@ class Application
         if (isset($help) || !isset($source) || !isset($destination)) {
             $this->printUsage();
         } else {
+            $destination = rtrim($destination, '/\\');
+            $source      = rtrim($source, '/\\');
             $this->createDocumentation($source, $destination, $argv);
         }
     }
@@ -37,13 +39,15 @@ class Application
         $unitTest     = ArrayUtils::getArg('-u', $argv);
         $codeCoverage = ArrayUtils::getArg('-c', $argv);
         $guide        = ArrayUtils::getArg('-g', $argv);
+        $base         = ArrayUtils::getArg('-b', $argv) ?? $destination;
+        $base         = rtrim($base, '/\\');
         $sources      = new Directory($source, '*');
 
-        $this->mainController         = new MainController($destination);
-        $this->codeCoverageController = new CodeCoverageController($destination, $codeCoverage);
-        $this->unitTestController     = new UnitTestController($destination, $unitTest);
-        $this->docController          = new DocumentationController($destination, $this->codeCoverageController, $this->unitTestController);
-        $this->guideController        = new GuideController($destination, $guide);
+        $this->mainController         = new MainController($destination, $base);
+        $this->codeCoverageController = new CodeCoverageController($destination, $base, $codeCoverage);
+        $this->unitTestController     = new UnitTestController($destination, $base, $unitTest);
+        $this->docController          = new DocumentationController($destination, $base, $this->codeCoverageController, $this->unitTestController);
+        $this->guideController        = new GuideController($destination, $base, $guide);
 
         $this->parse($sources);
         $this->docController->createTableOfContents();
