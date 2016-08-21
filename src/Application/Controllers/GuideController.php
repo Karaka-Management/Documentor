@@ -3,8 +3,8 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\GuideView;
-use phpOMS\System\File\Directory;
-use phpOMS\System\File\File;
+use phpOMS\System\File\Local\Directory;
+use phpOMS\System\File\Local\File;
 use phpOMS\Utils\StringUtils;
 
 class GuideController

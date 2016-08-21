@@ -3,7 +3,7 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\TestView;
-use phpOMS\System\File\File;
+use phpOMS\System\File\Local\File;
 
 class UnitTestController
 {

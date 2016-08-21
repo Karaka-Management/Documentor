@@ -7,7 +7,7 @@ use Documentor\src\Application\Controllers\DocumentationController;
 use Documentor\src\Application\Controllers\GuideController;
 use Documentor\src\Application\Controllers\MainController;
 use Documentor\src\Application\Controllers\UnitTestController;
-use phpOMS\System\File\Directory;
+use phpOMS\System\File\Local\Directory;
 use phpOMS\Utils\ArrayUtils;
 use phpOMS\Utils\StringUtils;
 

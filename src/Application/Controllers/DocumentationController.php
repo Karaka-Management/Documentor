@@ -7,8 +7,8 @@ use Documentor\src\Application\Views\ClassView;
 use Documentor\src\Application\Views\DocView;
 use Documentor\src\Application\Views\MethodView;
 use Documentor\src\Application\Views\TableOfContentsView;
-use phpOMS\System\File\Directory;
-use phpOMS\System\File\File;
+use phpOMS\System\File\Local\Directory;
+use phpOMS\System\File\Local\File;
 
 class DocumentationController
 {
