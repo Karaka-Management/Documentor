@@ -32,7 +32,15 @@ class ClassView extends DocView
         $members = $this->ref->getProperties();
         foreach ($members as $member) {
             $type = new Comment($member->getDocComment());
-            yield "    " . $this->formatModifier(implode(' ', Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable($member->getName()) . ';';
+            yield '    ' . $this->formatModifier(implode(' ', Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable('$' . $member->getName()) . ';';
+        }
+    }
+
+    public function getConst()
+    {
+        $consts = $this->ref->getConstants();
+        foreach ($consts as $name => $value) {
+            yield '    ' . $this->formatModifier('const') . ' ' . $this->formatVariable($name) . ' = ' . $this->formatValue($value) . ';';
         }
     }
 
@@ -48,7 +56,7 @@ class ClassView extends DocView
                     . ($parameter->isPassedByReference() ? '&' : '')
                     . $this->formatVariable('$' . $parameter->getName())
                     . ($parameter->isDefaultValueAvailable() ? ' = '
-                        . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : is_array($parameter->getDefaultValue()) ? '[...]' : is_null($parameter->getDefaultValue()) ? 'null' : $parameter->getDefaultValue()) : '')
+                        . ($parameter->isDefaultValueConstant() ? $parameter->getDefaultValueConstantName() : $this->formatValue($parameter->getDefaultValue())) : '')
                     . ', ';
             }
 

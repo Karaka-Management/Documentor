@@ -7,6 +7,10 @@ This documentation generator creates a html documentation for php classes based 
 * PHP Version >= 7.0
 * phpOMS
 
+## Demo
+
+http://orange-management.github.io/docs/index.html (Guide not implemented)
+
 ## Usage
 
 A list of arguments can be found with:

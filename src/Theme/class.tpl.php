@@ -3,6 +3,18 @@
 <p><?= $this->getComment()->getLicense(); ?></p>
 <h2>Description</h2>
 <p><?= $this->getComment()->getDescription(); ?></p>
+<?php $latex = $this->getComment()->getLatex(); if(!empty($latex)) : ?>
+<h3>Formulas</h3>
+<?php foreach($latex as $formula) : ?>
+    <p>$$<?= $formula; ?>$$</p>
+<?php endforeach; endif; ?>
+<?php $todos = $this->getComment()->getTodos(); if(!empty($todos)) : ?>
+<h2>Todos</h2>
+<ul class="todo">
+<?php foreach($todos as $todo) : ?>
+    <li><?= $todo; ?>
+<?php endforeach; endif; ?>
+</ul>
 <h2>Tests</h2>
 <h3>Complexity</h3>
 <p>Cyclomatic complexity is a software metric (measurement), used to indicate the complexity of a program. It is a quantitative measure of the number of linearly independent paths through a program's source code.</p>
@@ -12,6 +24,7 @@
 <div class="meter orange"><span style="width: <?= $this->getCoverageRatio(); ?>%"></span></div>
 <h2>Overview</h2>
 <pre><?= $this->getTop(); ?><?= "\n{"; ?>
+<?php foreach($this->getConst() as $const) { echo "\n" . $const; } echo "\n"; ?>
 <?php foreach($this->getMembers() as $member) { echo "\n" . $member; } echo "\n"; ?>
 <?php foreach($this->getMethods() as $methods) { echo "\n" . $methods; } echo "\n}"; ?>
 </pre>

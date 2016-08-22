@@ -6,7 +6,7 @@
     <tr><td>Classes<td>Interfaces<td>Abstract<td>Traits<td>Methods<td>LOC
     <tr><td><?= $this->stats['classes']; ?><td><?= $this->stats['interfaces']; ?><td><?= $this->stats['abstracts']; ?><td><?= $this->stats['traits']; ?><td><?= $this->stats['methods']; ?><td><?= $this->stats['loc']; ?>
 </table>
-<h1>Methods without comments</h1>
+<h1>Methods without documentation</h1>
 <table class="full">
     <caption>Methods</caption>
     <tbody>

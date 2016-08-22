@@ -3,15 +3,17 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\BaseView;
-use phpOMS\System\File\File;
+use phpOMS\System\File\Local\File;
 
 class MainController
 {
     private $destination = '';
+    private $base = '';
 
-    public function __construct(string $destination)
+    public function __construct(string $destination, string $base)
     {
         $this->destination = $destination;
+        $this->base        = $base;
         $this->createBaseFiles();
     }
 
@@ -19,7 +21,7 @@ class MainController
     {
         $mainView = new BaseView();
         $mainView->setTemplate('/Documentor/src/Theme/index');
-        $mainView->setBase($this->destination);
+        $mainView->setBase($this->base);
         $mainView->setPath($this->destination . '/index' . '.html');
         $mainView->setSection('Main');
         $mainView->setTitle('Main');

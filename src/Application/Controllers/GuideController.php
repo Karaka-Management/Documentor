@@ -3,18 +3,20 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\GuideView;
-use phpOMS\System\File\Directory;
-use phpOMS\System\File\File;
+use phpOMS\System\File\Local\Directory;
+use phpOMS\System\File\Local\File;
 use phpOMS\Utils\StringUtils;
 
 class GuideController
 {
     private $destination = '';
+    private $base = '';
     private $nav = [];
 
-    public function __construct(string $destination, string $path = null)
+    public function __construct(string $destination, string $base, string $path = null)
     {
         $this->destination = $destination;
+        $this->base        = $base;
 
         if (isset($path)) {
             $dir       = new Directory($path);
@@ -46,7 +48,7 @@ class GuideController
                 if ($file->getExtension() === 'md') {
                     $guideView = new GuideView();
                     $guideView->setTemplate('/Documentor/src/Theme/guide');
-                    $guideView->setBase($this->destination);
+                    $guideView->setBase($this->base);
                     $guideView->setPath($this->destination . '/guide/' . substr($file->getDirPath(), strlen($base)) . '/' . $file->getFileName() . '.html');
                     $guideView->setSection('Guide');
                     $guideView->setTitle('Guide');

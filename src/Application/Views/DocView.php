@@ -80,6 +80,25 @@ class DocView extends BaseView
         }
     }
 
+    protected function formatValue($value, string $type = null)
+    {
+        if (!isset($type)) {
+            $type = gettype($value);
+        }
+
+        if ($type === 'bool' || $type === 'boolean') {
+            return ((bool) $value) ? 'true' : 'false';
+        } elseif ($type === 'string') {
+            return "'" . $value . "'";
+        } elseif ($type === 'object' && !isset($value)) {
+            return 'null';
+        } elseif ($type === 'array') {
+            return '[...]';
+        }
+
+        return $value;
+    }
+
     protected function formatType(string $type) : string
     {
         return '<span class="type">' . $type . '</span>';

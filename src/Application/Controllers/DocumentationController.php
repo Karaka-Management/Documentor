@@ -7,12 +7,13 @@ use Documentor\src\Application\Views\ClassView;
 use Documentor\src\Application\Views\DocView;
 use Documentor\src\Application\Views\MethodView;
 use Documentor\src\Application\Views\TableOfContentsView;
-use phpOMS\System\File\Directory;
-use phpOMS\System\File\File;
+use phpOMS\System\File\Local\Directory;
+use phpOMS\System\File\Local\File;
 
 class DocumentationController
 {
     private $destination = '';
+    private $base = '';
     private $codeCoverage = null;
     private $unitTest = null;
     private $files = [];
@@ -20,9 +21,10 @@ class DocumentationController
     private $stats = ['loc' => 0, 'classes' => 0, 'traits' => 0, 'interfaces' => 0, 'abstracts' => 0, 'methods' => 0];
     private $withoutComment = [];
 
-    public function __construct(string $destination, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
+    public function __construct(string $destination, string $base, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
     {
-        $this->destination  = rtrim($destination, '/\\');
+        $this->destination  = $destination;
+        $this->base         = $base;
         $this->codeCoverage = $codeCoverage;
         $this->unitTest     = $unitTest;
 
@@ -52,7 +54,7 @@ class DocumentationController
     {
         $tocView = new TableOfContentsView();
         $tocView->setPath($this->destination . '/documentation' . '.html');
-        $tocView->setBase($this->destination);
+        $tocView->setBase($this->base);
         $tocView->setTemplate('/Documentor/src/Theme/documentation');
         $tocView->setTitle('Table of Contents');
         $tocView->setSection('Documentation');
@@ -81,7 +83,7 @@ class DocumentationController
             $outPath       = $this->destination . '/' . str_replace('\\', '/', $class->getName());
 
             $classView->setPath($outPath . '.html');
-            $classView->setBase($this->destination);
+            $classView->setBase($this->base);
             $classView->setTemplate('/Documentor/src/Theme/class');
             $classView->setTitle($class->getShortName());
             $classView->setSection('Documentation');
@@ -102,8 +104,10 @@ class DocumentationController
 
             $methods = $class->getMethods();
             foreach ($methods as $method) {
-                $this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $class->getName());
-                $this->files[] = [$class->getName() . '-' . $method->getShortName(), $class->getShortName() . '-' . $method->getShortName()];
+                if ($method->isUserDefined()) {
+                    $this->parseMethod($method, $outPath . '-' . $method->getShortName() . '.html', $class->getName());
+                    $this->files[] = [$class->getName() . '-' . $method->getShortName(), $class->getShortName() . '-' . $method->getShortName()];
+                }
             }
 
         } catch (\Exception $e) {
@@ -121,7 +125,7 @@ class DocumentationController
     {
         $methodView = new MethodView();
         $methodView->setTemplate('/Documentor/src/Theme/method');
-        $methodView->setBase($this->destination);
+        $methodView->setBase($this->base);
         $methodView->setReflection($method);
         $docs = $method->getDocComment();
 
