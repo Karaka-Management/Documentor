@@ -3,6 +3,11 @@
 <p><?= $this->getComment()->getLicense(); ?></p>
 <h2>Description</h2>
 <p><?= $this->getComment()->getDescription(); ?></p>
+<?php $latex = $this->getComment()->getLatex(); if(!empty($latex)) : ?>
+<h3>Formulas</h3>
+<?php foreach($latex as $formula) : ?>
+    <p>$$<?= $formula; ?>$$</p>
+<?php endforeach; endif; ?>
 <h2>Tests</h2>
 <h3>Complexity</h3>
 <p>Cyclomatic complexity is a software metric (measurement), used to indicate the complexity of a program. It is a quantitative measure of the number of linearly independent paths through a program's source code.</p>

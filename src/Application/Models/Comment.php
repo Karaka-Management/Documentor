@@ -20,7 +20,7 @@ class Comment
     private $throws = null;
     private $return = null;
     private $title = null;
-    private $latex = null;
+    private $latex = [];
     private $example = [];
     private $empty = true;
 
@@ -39,11 +39,11 @@ class Comment
         $this->category   = $this->findKey('@category', $comment)[0] ?? null;
         $this->since      = $this->findKey('@since', $comment)[0] ?? null;
         $this->deprecated = isset($this->findKey('@deprecated', $comment)[0]);
-        $this->todo       = $this->findKey('@todo', $comment)[0] ?? null;
+        $this->todo       = $this->findKey('@todo', $comment);
         $this->author     = $this->findKey('@author', $comment)[0] ?? null;
         $this->link       = $this->findKey('@link', $comment)[0] ?? null;
         $this->version    = $this->findKey('@version', $comment)[0] ?? null;
-        $this->latex      = $this->findKey('@latex', $comment)[0] ?? null;
+        $this->latex      = $this->findKey('@latex', $comment);
         $this->example    = $this->findKey('@example', $comment);
 
         $this->param       = $this->parseParameter($comment);
@@ -177,7 +177,7 @@ class Comment
         return $this->var;
     }
 
-    public function getLatex()
+    public function getLatex() : array
     {
         return $this->latex;
     }
