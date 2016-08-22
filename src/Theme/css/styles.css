@@ -359,3 +359,6 @@ main nav li a:hover + ul {
     display: inline-block;
 }
 
+ul.todo {
+    list-style: circle;
+}

@@ -13,7 +13,7 @@ class Comment
     private $category = null;
     private $since = null;
     private $deprecated = null;
-    private $todo = null;
+    private $todo = [];
     private $author = null;
     private $link = null;
     private $param = [];
@@ -180,6 +180,11 @@ class Comment
     public function getLatex() : array
     {
         return $this->latex;
+    }
+
+    public function getTodos() : array
+    {
+        return $this->todo;
     }
 
     public function getAuthor()
