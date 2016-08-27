@@ -25,6 +25,8 @@ The default usage would be:
 php Documentor/src/index.php -s <SOURCE_PATH> -d <DESTINATION_PATH> -c <COVERAGE_PATH>
 ```
 
+The documentation starts to shine when you use a unit test log as well as the coverage report and a html guide. The default template does not hide these page if they are missing and the overall experience will be not as good.
+
 ### Arguments
 
 * `-h` Show help
