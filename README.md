@@ -35,6 +35,7 @@ The documentation starts to shine when you use a unit test log as well as the co
 * `-c` Code coverage source (`coverage-clover`)
 * `-u` Unit test log (`junit` style)
 * `-g` Html guide source
+* `-b` Base uri for web access (e.g. http://www.yoururl.com/docs)
 
 ## Supported Key Words
 
