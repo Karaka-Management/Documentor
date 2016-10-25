@@ -31,8 +31,8 @@ class GuideController
         foreach ($dirs as $file) {
             if ($file instanceof Directory) {
                 $nav[$file->getName()] = $this->createNavigation($file, $base);
-            } elseif ($file instanceof File && $file->getExtension() === 'md' && !StringUtils::startsWith($file->getFileName(), 'README') && !StringUtils::startsWith($file->getFileName(), 'SUMMARY') && !StringUtils::startsWith($file->getFileName(), 'index')) {
-                $nav[] = ['path' => substr($file->getDirPath(), strlen($base)), 'name' => $file->getFileName()];
+            } elseif ($file instanceof File && $file->getExtension() === 'md' && !StringUtils::startsWith($file->getName(), 'README') && !StringUtils::startsWith($file->getName(), 'SUMMARY') && !StringUtils::startsWith($file->getName(), 'index')) {
+                $nav[] = ['path' => substr($file->getDirPath(), strlen($base)), 'name' => $file->getName()];
             }
         }
 
@@ -49,7 +49,7 @@ class GuideController
                     $guideView = new GuideView();
                     $guideView->setTemplate('/Documentor/src/Theme/guide');
                     $guideView->setBase($this->base);
-                    $guideView->setPath($this->destination . '/guide/' . substr($file->getDirPath(), strlen($base)) . '/' . $file->getFileName() . '.html');
+                    $guideView->setPath($this->destination . '/guide/' . substr($file->getDirPath(), strlen($base)) . '/' . $file->getName() . '.html');
                     $guideView->setSection('Guide');
                     $guideView->setTitle('Guide');
                     $guideView->setNavigation($this->nav);
