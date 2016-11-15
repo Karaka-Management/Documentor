@@ -163,7 +163,7 @@ class DocumentationController
             $images = new Directory(__DIR__ . '/../../Theme/img');
             foreach ($images as $image) {
                 if ($image instanceof File) {
-                    File::copy($image->getPath(), $this->destination . '/img/' . $image->getName(), true);
+                    File::copy($image->getPath(), $this->destination . '/img/' . $image->getName() . '.' . $image->getExtension(), true);
                 }
             }
         } catch (\Exception $e) {
