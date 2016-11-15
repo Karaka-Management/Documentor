@@ -7,7 +7,7 @@
     <div id="logo-name">Orange Management</div>
     <nav>
         <ul>
-            <li class="<?= $this->section === '' || $this->section === 'Main' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/index.html">MAIN</a><li class="<?= $this->section === 'Guide' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/guide/index.html">GUIDE</a><li class="<?= $this->section === 'Documentation' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/documentation.html">DOCS</a><li class="<?= $this->section === 'Test' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/test.html">TEST</a><li class="<?= $this->section === 'Coverage' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/coverage.html">COVERAGE</a>
+            <li class="<?= $this->section === '' || $this->section === 'Main' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/index.html">MAIN</a><!--<li class="<?= $this->section === 'Guide' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/guide/index.html">GUIDE</a>--><li class="<?= $this->section === 'Documentation' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/documentation.html">DOCS</a><li class="<?= $this->section === 'Test' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/test.html">TEST</a><li class="<?= $this->section === 'Coverage' ? 'active' : ''; ?>"><a href="<?= $this->base; ?>/coverage.html">COVERAGE</a>
         </ul>
     </nav>
 </div>
