@@ -15,6 +15,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/Orange-Management/Documentor.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Orange-Management/phpOMS.git"
         }
     ],
     "autoload": {
