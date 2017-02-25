@@ -9,7 +9,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "phpOMS": "dev-master"
+        "Orange-Management/phpOMS": "dev-master"
     },
     "repositories": [
         {
