@@ -7,10 +7,6 @@
             "email": "spl1nes.com@googlemail.com"
         }
     ],
-    "require": {
-        "php": "^7.0",
-        "Orange-Management/phpOMS": "dev-master"
-    },
     "repositories": [
         {
             "type": "vcs",
@@ -21,6 +17,10 @@
             "url": "https://github.com/Orange-Management/phpOMS.git"
         }
     ],
+    "require": {
+        "php": "^7.0",
+        "Orange-Management/phpOMS": "dev-master"
+    },
     "autoload": {
         "psr-0" : {
             "Documentor" : ""

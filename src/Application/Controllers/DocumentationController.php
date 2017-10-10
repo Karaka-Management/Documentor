@@ -75,7 +75,7 @@ class DocumentationController
             $this->loc = file($path);
             $this->stats['loc'] += count($this->loc);
 
-            $className = substr($path, strlen(realpath(__DIR__ . '/../../../../')), -4);
+            $className = trim(substr($path, 0, -4), '.');
             $className = str_replace('/', '\\', $className);
             $class     = new \ReflectionClass($className);
 
@@ -111,11 +111,7 @@ class DocumentationController
             }
 
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            echo $e->getFile();
-        } catch (\Throwable $e) {
-            echo $e->getMessage();
-            echo $e->getFile();
+            echo $e->getMessage(), ' - ', $e->getFile(), ' - ', $e->getLine(), "\n";
         } finally {
             return $classView;
         }
