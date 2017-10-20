@@ -14,6 +14,7 @@ class DocumentationController
 {
     private $destination = '';
     private $base = '';
+    private $sourcePath = '';
     private $codeCoverage = null;
     private $unitTest = null;
     private $files = [];
@@ -21,12 +22,13 @@ class DocumentationController
     private $stats = ['loc' => 0, 'classes' => 0, 'traits' => 0, 'interfaces' => 0, 'abstracts' => 0, 'methods' => 0];
     private $withoutComment = [];
 
-    public function __construct(string $destination, string $base, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
+    public function __construct(string $destination, string $base, string $source, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
     {
         $this->destination  = $destination;
         $this->base         = $base;
         $this->codeCoverage = $codeCoverage;
         $this->unitTest     = $unitTest;
+        $this->sourcePath  = $source;
 
         $this->createBaseFiles();
     }
@@ -75,7 +77,7 @@ class DocumentationController
             $this->loc = file($path);
             $this->stats['loc'] += count($this->loc);
 
-            $className = trim(substr($path, 0, -4), '.');
+            $className = substr($path, strlen(rtrim(Directory::parent($this->sourcePath), '/\\')), -4);
             $className = str_replace('/', '\\', $className);
             $class     = new \ReflectionClass($className);
 

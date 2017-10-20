@@ -63,7 +63,7 @@ class Application
         $this->mainController         = new MainController($destination, $base);
         $this->codeCoverageController = new CodeCoverageController($destination, $base, $codeCoverage);
         $this->unitTestController     = new UnitTestController($destination, $base, $unitTest);
-        $this->docController          = new DocumentationController($destination, $base, $this->codeCoverageController, $this->unitTestController);
+        $this->docController          = new DocumentationController($destination, $base, $source, $this->codeCoverageController, $this->unitTestController);
         $this->guideController        = new GuideController($destination, $base, $guide);
 
         $this->parse($sources);
