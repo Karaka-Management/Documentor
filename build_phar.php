@@ -1,7 +1,6 @@
 <?php
 $phar = new \Phar(__DIR__ . '/documentor.phar', FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME, 'documentor.phar');
 $phar->startBuffering();
-$phar->setStub('<?php Phar::mapPhar(); include "phar://documentor.phar/index.php"; __HALT_COMPILER(); ?>');
-$phar->buildFromDirectory(__DIR__ . '/src');
-$phar->buildFromDirectory(__DIR__ . '/../phpOMS');
+$phar->setStub($phar->createDefaultStub('Documentor/src/index.php', 'Documentor/src/index.php'));
+$phar->buildFromDirectory(realpath(__DIR__ . '/..'), '/((Model|jsOMS|phpOMS|Documentor)+(\\/|\\\)+(.*?\\.)(php|css|png|js|ico))$/');
 $phar->stopBuffering();

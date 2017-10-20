@@ -21,6 +21,8 @@ class Application
 
     public function __construct(array $argv)
     {
+        $this->setupHandlers();
+
         $help        = ArrayUtils::getArg('-h', $argv);
         $source      = ArrayUtils::getArg('-s', $argv);
         $destination = ArrayUtils::getArg('-d', $argv);
@@ -32,6 +34,21 @@ class Application
             $source      = rtrim($source, '/\\');
             $this->createDocumentation($source, $destination, $argv);
         }
+    }
+
+    /**
+     * Setup general handlers for the application.
+     *
+     * @return void
+     *
+     * @since  1.0.0
+     */
+    private function setupHandlers() /* : void */
+    {
+        set_exception_handler(['\phpOMS\UnhandledHandler', 'exceptionHandler']);
+        set_error_handler(['\phpOMS\UnhandledHandler', 'errorHandler']);
+        register_shutdown_function(['\phpOMS\UnhandledHandler', 'shutdownHandler']);
+        mb_internal_encoding('UTF-8');
     }
 
     private function createDocumentation(string $source, string $destination, array $argv)
