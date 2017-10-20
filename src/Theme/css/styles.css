@@ -119,8 +119,8 @@ header h1 {
 main {
     color: #4D4D4D;
     background: #fff;
-    font-size: 1.3em;
-    line-height: 1.7em;
+    font-size: 1.1em;
+    line-height: 1.5em;
 }
 
 main img {
@@ -244,7 +244,6 @@ table caption {
     border: 1px solid #dddddd;
     white-space: nowrap;
     background: #f4f4f4;
-    border-bottom: none;
 }
 
 th {
