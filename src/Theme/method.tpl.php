@@ -1,6 +1,6 @@
 <?php include 'header.tpl.php'; ?>
 <h1><?= $this->ref->getDeclaringClass()->getShortName(); ?> ~ <?= $this->ref->getShortName(); ?></h1>
-<p><?= $this->getComment()->isDeprecated() ? '<span class="deprecated">@deprecated</span> ' : ''; ?>@since: <?= $this->getComment()->getSince(); ?>; @author: <?= $this->getComment()->getAuthor(); ?>; @class: <?= $this->getClassLink(); ?></p>
+<p><?= $this->getComment()->isDeprecated() ? '<span class="deprecated">@deprecated</span> ' : ''; ?>@since: <?= $this->getComment()->getSince(); ?>; @class: <?= $this->getClassLink(); ?></p>
 <h2>Function</h2>
 <pre><?= $this->getMethod(); ?></pre>
 <?php $description = $this->getComment()->getDescription(); if(!empty($description)) : ?>
