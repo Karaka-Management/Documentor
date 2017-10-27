@@ -36,13 +36,6 @@ class Application
         }
     }
 
-    /**
-     * Setup general handlers for the application.
-     *
-     * @return void
-     *
-     * @since  1.0.0
-     */
     private function setupHandlers() /* : void */
     {
         set_exception_handler(['\phpOMS\UnhandledHandler', 'exceptionHandler']);
