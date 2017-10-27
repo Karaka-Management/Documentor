@@ -92,7 +92,7 @@ class DocView extends BaseView
             return "'" . $value . "'";
         } elseif ($type === 'object' && !isset($value)) {
             return 'null';
-        } elseif($type === 'NULL') {
+        } elseif ($type === 'NULL') {
             return 'null';
         } elseif ($type === 'array') {
             return '[...]';
