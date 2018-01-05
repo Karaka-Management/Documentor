@@ -7,7 +7,6 @@ use Documentor\src\Application\Controllers\DocumentationController;
 use Documentor\src\Application\Controllers\GuideController;
 use Documentor\src\Application\Controllers\MainController;
 use Documentor\src\Application\Controllers\UnitTestController;
-use phpOMS\System\File\Local\Directory;
 
 class Application
 {
@@ -56,7 +55,8 @@ class Application
         $guide        = ($key = array_search('-g', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
         $base         = ($key = array_search('-b', $argv)) === false || $key === count($argv) - 1 ? $destination : trim($argv[$key + 1], '" ');
         $base         = rtrim($base, '/\\');
-        $sources      = new Directory($source, '*');
+        
+        $sources      = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source));
 
         $this->mainController         = new MainController($destination, $base);
         $this->codeCoverageController = new CodeCoverageController($destination, $base, $codeCoverage);
@@ -80,12 +80,12 @@ class Application
         echo "\t" . '-b Base uri for web access (e.g. http://www.yoururl.com).' . "\n";
     }
 
-    private function parse(Directory $sources)
+    private function parse(RecursiveIteratorIterator $sources)
     {
         foreach ($sources as $source) {
-            if ($source instanceof Directory) {
+            if ($source->isDir()) {
                 $this->parse($source);
-            } elseif ((($temp = strlen($source->getPath()) - strlen('.php')) >= 0 && strpos($source->getPath(), '.php', $temp) !== false)) {
+            } elseif ((($temp = strlen($source->getPathname()) - strlen('.php')) >= 0 && strpos($source->getPathname(), '.php', $temp) !== false)) {
                 $this->docController->parse($source);
             }
         }
