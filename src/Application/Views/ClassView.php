@@ -16,7 +16,7 @@ class ClassView extends DocView
     
     public function getUses() : array
     {
-        return $this->uses;
+        return array_unique($this->uses);
     }
     
     public function getTop() : string
