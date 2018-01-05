@@ -13,7 +13,7 @@ class Comment
     private $since = null;
     private $deprecated = null;
     private $todo = [];
-    private $link = null;
+    private $link = [];
     private $param = [];
     private $throws = null;
     private $return = null;
@@ -36,8 +36,8 @@ class Comment
         $this->package    = $this->findKey('@package', $comment)[0] ?? null;
         $this->since      = $this->findKey('@since', $comment)[0] ?? null;
         $this->deprecated = isset($this->findKey('@deprecated', $comment)[0]);
-        $this->todo       = $this->findKey('@todo', $comment);
-        $this->link       = $this->findKey('@link', $comment)[0] ?? null;
+        $this->todo       = $this->findKey('@todo', $comment) ?? [];
+        $this->link       = $this->findKey('@link', $comment)[0] ?? [];
         $this->version    = $this->findKey('@version', $comment)[0] ?? null;
         $this->latex      = $this->findKey('@latex', $comment);
         $this->example    = $this->findKey('@example', $comment);
@@ -166,6 +166,11 @@ class Comment
     public function getLicense()
     {
         return $this->license;
+    }
+    
+    public function getLinks() : array
+    {
+        return $this->link;
     }
 
     public function getVar()
