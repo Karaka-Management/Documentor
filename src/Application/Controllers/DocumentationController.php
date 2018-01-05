@@ -103,6 +103,24 @@ class DocumentationController
             $classView->setReflection($class);
             $classView->setComment(new Comment($class->getDocComment()));
             $classView->setCoverage($this->codeCoverage->getClass($class->getName()) ?? []);
+            
+            // Parse uses
+            if ($class->getParentClass() !== false) {
+                $classView->addUse($class->inNamespace());
+            }
+            
+            $interfaces = $class->getInterfaces();
+            foreach ($interfaces as $interface) {
+                $classView->addUse($interface->inNamespace());
+            }
+            
+            foreach ($this->loc as $line) {
+                $line = trim($line);
+                
+                if (substr($line, 0, 4) === 'use ') {
+                    $classView->addUse(substr($line, 4, -1));
+                }
+            }
 
             $methods = $class->getMethods();
             foreach ($methods as $method) {
