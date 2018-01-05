@@ -7,6 +7,18 @@ use Reflection;
 
 class ClassView extends DocView
 {
+    private $uses = [];
+    
+    public function addUse(string $use)
+    {
+        $this->uses[] = $use;
+    }
+    
+    public function getUses() : array
+    {
+        return $this->uses;
+    }
+    
     public function getTop() : string
     {
         $abstract = $this->ref->isAbstract() ? 'abstract ' : '';
