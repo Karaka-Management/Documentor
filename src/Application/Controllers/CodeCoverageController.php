@@ -215,6 +215,7 @@ class CodeCoverageController
         $coverageView->setComplexity($this->totalComplexity);
         $coverageView->setCrap($this->totalCrap);
         
+        mkdir(dirname($coverageView->getPath()), 0777, true);
         file_put_contents($coverageView->getPath(), $coverageView->render());
     }
 }

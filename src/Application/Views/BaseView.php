@@ -18,7 +18,7 @@ class BaseView
     public function render(...$data)
     {
         $ob   = '';
-        $path = __DIR__ . '/../..' . $this->template . '.tpl.php';
+        $path = __DIR__ . '/../../../..' . $this->template . '.tpl.php';
         
         if (!file_exists($path)) {
             throw new Exception($path);
@@ -34,9 +34,8 @@ class BaseView
             if (is_array($includeData)) {
                 return $includeData;
             }
-            
         } catch(\Throwable $e) {
-            $ob = '';
+            echo $e->getMessage();
         } finally {
             return $ob;
         }

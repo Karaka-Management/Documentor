@@ -25,6 +25,7 @@ class MainController
         $mainView->setSection('Main');
         $mainView->setTitle('Main');
 
+        mkdir(dirname($mainView->getPath()), 0777, true);
         file_put_contents($mainView->getPath(), $mainView->render());
     }
 }

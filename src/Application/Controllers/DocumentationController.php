@@ -31,11 +31,12 @@ class DocumentationController
         $this->createBaseFiles();
     }
 
-    public function parse(RecursiveIteratorIterator $file)
+    public function parse(\SplFileInfo $file)
     {
         $classView = $this->parseClass($file->getPathname());
 
         if ($classView->getPath() !== '') {
+            mkdir(dirname($classView->getPath()), 0777, true);
             file_put_contents($classView->getPath(), $classView->render());
         }
     }
@@ -47,6 +48,7 @@ class DocumentationController
             $js .= "\n" . 'searchDataset.push([\'' . str_replace('\\', '\\\\', $file[0]) . '\', \'' . $file[1] . '\']);';
         }
 
+        mkdir($this->destination, 0777, true);
         file_put_contents($this->destination . '/js/searchDataset.js', $js);
     }
 
@@ -61,6 +63,7 @@ class DocumentationController
         $tocView->setStats($this->stats);
         $tocView->setWithoutComment($this->withoutComment);
         
+        mkdir(dirname($tocView->getPath()), 0777, true);
         file_put_contents($tocView->getPath(), $tocView->render());
     }
 
@@ -165,16 +168,21 @@ class DocumentationController
             $this->withoutComment[] = $className . '-' . $method->getShortName();
         }
         
+        mkdir(dirname($methodView->getPath()), 0777, true);
         file_put_contents($methodView->getPath(), $methodView->render());
     }
 
     private function createBaseFiles()
     {
         try {
+            mkdir($this->destination . '/css/', 0777, true);
+            mkdir($this->destination . '/js/', 0777, true);
+            mkdir($this->destination . '/img/', 0777, true);
+
             copy(__DIR__ . '/../../Theme/css/styles.css', $this->destination . '/css/styles.css');
             copy(__DIR__ . '/../../Theme/js/documentor.js', $this->destination . '/js/documentor.js');
 
-            $images = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__ . '/../../Theme/img'));
+            $images = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../Theme/img'));
             foreach ($images as $image) {
                 if ($image->isFile()) {
                     copy($image->getPathname(), $this->destination . '/img/' . $image->getFilename());

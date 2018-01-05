@@ -16,7 +16,7 @@
 <?php endforeach; ?>
 </ul>
 <?php endif; ?>
-<?php $links = $this->getLinks(); if (!empty($links)) : ?>
+<?php $links = $this->getComment()->getLinks(); if (!empty($links)) : ?>
 <h2>Links</h2>
 <ul>
 <?php foreach ($links as $link) : ?>

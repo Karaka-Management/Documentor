@@ -3,7 +3,6 @@
 namespace Documentor\src\Application\Views;
 
 use Documentor\src\Application\Models\Comment;
-use phpOMS\Utils\StringUtils;
 
 class DocView extends BaseView
 {
@@ -34,7 +33,7 @@ class DocView extends BaseView
 
     public function setCode(string $code)
     {
-        $trim  = StringUtils::countCharacterFromStart($code, ' ');
+        $trim  = strlen($code) - strlen(ltrim($code, ' '));
         $lines = explode("\n", $code);
 
         foreach ($lines as $key => $line) {

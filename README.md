@@ -5,7 +5,6 @@ This documentation generator creates a html documentation for php classes based 
 ## Requirements
 
 * PHP Version >= 7.0
-* phpOMS
 
 ## Demo
 

@@ -74,6 +74,7 @@ class UnitTestController
         $testView->setTest($this->test);
         $testView->setResults($this->testResults);
         
+        mkdir(dirname($testView->getPath()), 0777, true);
         file_put_contents($testView->getPath(), $testView->render());
     }
 }

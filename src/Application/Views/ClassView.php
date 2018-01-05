@@ -52,9 +52,7 @@ class ClassView extends DocView
     {
         $consts = $this->ref->getConstants();
         foreach ($consts as $name => $value) {
-            $type = new Comment($const->getDocComment());
-            
-            yield '    ' . $this->formatModifier('const') . ' ' . $this->linkType($type->getVar()) . ' ' .$this->formatVariable($name) . ' = ' . $this->formatValue($value) . ';';
+            yield '    ' . $this->formatModifier('const') . ' ' .$this->formatVariable($name) . ' = ' . $this->formatValue($value) . ';';
         }
     }
 

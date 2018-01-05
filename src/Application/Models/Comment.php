@@ -37,7 +37,7 @@ class Comment
         $this->since      = $this->findKey('@since', $comment)[0] ?? null;
         $this->deprecated = isset($this->findKey('@deprecated', $comment)[0]);
         $this->todo       = $this->findKey('@todo', $comment) ?? [];
-        $this->link       = $this->findKey('@link', $comment)[0] ?? [];
+        $this->link       = $this->findKey('@link', $comment) ?? [];
         $this->version    = $this->findKey('@version', $comment)[0] ?? null;
         $this->latex      = $this->findKey('@latex', $comment);
         $this->example    = $this->findKey('@example', $comment);
