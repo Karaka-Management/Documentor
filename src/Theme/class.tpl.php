@@ -9,6 +9,14 @@
     <p>$$<?= $formula; ?>$$</p>
 <?php endforeach; endif; ?>
 <?php $todos = $this->getComment()->getTodos(); if (!empty($todos)) : ?>
+<?php $uses = $this->getUses(); if (!empty($uses)) : ?>
+<h2>Dependencies</h2>
+<ul>
+<?php foreach ($uses as $use) : ?>
+    <li><?= $use; ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
 <h2>Todos</h2>
 <ul class="todo">
 <?php foreach ($todos as $todo) : ?>
