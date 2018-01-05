@@ -3,7 +3,6 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\TestView;
-use phpOMS\System\File\Local\File;
 
 class UnitTestController
 {
@@ -74,7 +73,7 @@ class UnitTestController
         $testView->setSection('Test');
         $testView->setTest($this->test);
         $testView->setResults($this->testResults);
-
-        File::put($testView->getPath(), $testView->render());
+        
+        file_put_contents($testView->getPath(), $testView->render());
     }
 }
