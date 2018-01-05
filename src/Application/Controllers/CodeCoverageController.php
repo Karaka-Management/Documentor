@@ -3,7 +3,6 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\CoverageView;
-use phpOMS\System\File\Local\File;
 
 class CodeCoverageController
 {
@@ -215,7 +214,7 @@ class CodeCoverageController
         $coverageView->setTopCrapClasses($this->getTopCrapClasses(15));
         $coverageView->setComplexity($this->totalComplexity);
         $coverageView->setCrap($this->totalCrap);
-
-        File::put($coverageView->getPath(), $coverageView->render());
+        
+        file_put_contents($coverageView->getPath(), $coverageView->render());
     }
 }
