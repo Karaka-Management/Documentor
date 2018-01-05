@@ -5,7 +5,6 @@ namespace Documentor\src\Application\Controllers;
 use Documentor\src\Application\Views\GuideView;
 use phpOMS\System\File\Local\Directory;
 use phpOMS\System\File\Local\File;
-use phpOMS\Utils\StringUtils;
 
 class GuideController
 {
@@ -31,7 +30,7 @@ class GuideController
         foreach ($dirs as $file) {
             if ($file instanceof Directory) {
                 $nav[$file->getName()] = $this->createNavigation($file, $base);
-            } elseif ($file instanceof File && $file->getExtension() === 'md' && !StringUtils::startsWith($file->getName(), 'README') && !StringUtils::startsWith($file->getName(), 'SUMMARY') && !StringUtils::startsWith($file->getName(), 'index')) {
+            } elseif ($file instanceof File && $file->getExtension() === 'md' && substr($file->getName(), 0, strlen('README')) !== 'README' && substr($file->getName(), 0, strlen('SUMMARY')) !== 'SUMMARY' && substr($file->getName(), 0, strlen('index')) !== 'index') {
                 $nav[] = ['path' => substr($file->getDirPath(), strlen($base)), 'name' => $file->getName()];
             }
         }
