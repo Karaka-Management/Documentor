@@ -11,7 +11,7 @@
     <thead>
     <caption>Errors</caption>
     <tbody>
-    <?php foreach($this->results['errors'] as $error) : ?>
+    <?php foreach ($this->results['errors'] as $error) : ?>
         <tr><td><?= $error['class']; ?>-<?= $error['method']; ?>
     <?php endforeach; ?>
 </table>
@@ -20,7 +20,7 @@
     <thead>
     <caption>Failures</caption>
     <tbody>
-    <?php foreach($this->results['failures'] as $failure) : ?>
+    <?php foreach ($this->results['failures'] as $failure) : ?>
         <tr><td><?= $failure['class']; ?>-<?= $failure['method']; ?>
     <?php endforeach; ?>
 </table>

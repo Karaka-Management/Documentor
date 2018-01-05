@@ -10,12 +10,10 @@ class Comment
     private $license = null;
     private $var = null;
     private $package = null;
-    private $category = null;
     private $since = null;
     private $deprecated = null;
     private $todo = [];
-    private $author = null;
-    private $link = null;
+    private $link = [];
     private $param = [];
     private $throws = null;
     private $return = null;
@@ -36,12 +34,10 @@ class Comment
         $this->license    = $this->findKey('@license', $comment)[0] ?? null;
         $this->var        = $this->findKey('@var', $comment)[0] ?? null;
         $this->package    = $this->findKey('@package', $comment)[0] ?? null;
-        $this->category   = $this->findKey('@category', $comment)[0] ?? null;
         $this->since      = $this->findKey('@since', $comment)[0] ?? null;
         $this->deprecated = isset($this->findKey('@deprecated', $comment)[0]);
-        $this->todo       = $this->findKey('@todo', $comment);
-        $this->author     = $this->findKey('@author', $comment)[0] ?? null;
-        $this->link       = $this->findKey('@link', $comment)[0] ?? null;
+        $this->todo       = $this->findKey('@todo', $comment) ?? [];
+        $this->link       = $this->findKey('@link', $comment) ?? [];
         $this->version    = $this->findKey('@version', $comment)[0] ?? null;
         $this->latex      = $this->findKey('@latex', $comment);
         $this->example    = $this->findKey('@example', $comment);
@@ -171,6 +167,11 @@ class Comment
     {
         return $this->license;
     }
+    
+    public function getLinks() : array
+    {
+        return $this->link;
+    }
 
     public function getVar()
     {
@@ -185,11 +186,6 @@ class Comment
     public function getTodos() : array
     {
         return $this->todo;
-    }
-
-    public function getAuthor()
-    {
-        return $this->author;
     }
 
     public function getSince()

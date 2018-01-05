@@ -5,7 +5,6 @@ This documentation generator creates a html documentation for php classes based 
 ## Requirements
 
 * PHP Version >= 7.0
-* phpOMS
 
 ## Demo
 
@@ -41,7 +40,7 @@ The documentation starts to shine when you use a unit test log as well as the co
 
 The following key words hold special meaning in the code documentation.
 
-@author @var @param @version @since @latex @example @output @annotation @license @link @category @package @return @throws @todo @uses @see @deprecated
+@var @param @version @since @latex @example @output @annotation @license @link @package @return @throws @todo @uses @see @deprecated
 
 ### Preview
 

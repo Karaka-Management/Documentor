@@ -7,8 +7,6 @@ use Documentor\src\Application\Views\ClassView;
 use Documentor\src\Application\Views\DocView;
 use Documentor\src\Application\Views\MethodView;
 use Documentor\src\Application\Views\TableOfContentsView;
-use phpOMS\System\File\Local\Directory;
-use phpOMS\System\File\Local\File;
 
 class DocumentationController
 {
@@ -28,17 +26,18 @@ class DocumentationController
         $this->base         = $base;
         $this->codeCoverage = $codeCoverage;
         $this->unitTest     = $unitTest;
-        $this->sourcePath  = $source;
+        $this->sourcePath   = $source;
 
         $this->createBaseFiles();
     }
 
-    public function parse(File $file)
+    public function parse(\SplFileInfo $file)
     {
-        $classView = $this->parseClass($file->getPath());
+        $classView = $this->parseClass($file->getPathname());
 
         if ($classView->getPath() !== '') {
-            File::put($classView->getPath(), $classView->render());
+            mkdir(dirname($classView->getPath()), 0777, true);
+            file_put_contents($classView->getPath(), $classView->render());
         }
     }
 
@@ -49,6 +48,7 @@ class DocumentationController
             $js .= "\n" . 'searchDataset.push([\'' . str_replace('\\', '\\\\', $file[0]) . '\', \'' . $file[1] . '\']);';
         }
 
+        mkdir($this->destination, 0777, true);
         file_put_contents($this->destination . '/js/searchDataset.js', $js);
     }
 
@@ -62,8 +62,9 @@ class DocumentationController
         $tocView->setSection('Documentation');
         $tocView->setStats($this->stats);
         $tocView->setWithoutComment($this->withoutComment);
-
-        File::put($tocView->getPath(), $tocView->render());
+        
+        mkdir(dirname($tocView->getPath()), 0777, true);
+        file_put_contents($tocView->getPath(), $tocView->render());
     }
 
     private function parseClass(string $path) : DocView
@@ -77,7 +78,7 @@ class DocumentationController
             $this->loc = file($path);
             $this->stats['loc'] += count($this->loc);
 
-            $className = substr($path, strlen(rtrim(Directory::parent($this->sourcePath), '/\\')), -4);
+            $className = substr($path, strlen(rtrim(dirname($this->sourcePath), '/\\')), -4);
             $className = str_replace('/', '\\', $className);
             $class     = new \ReflectionClass($className);
 
@@ -103,6 +104,24 @@ class DocumentationController
             $classView->setReflection($class);
             $classView->setComment(new Comment($class->getDocComment()));
             $classView->setCoverage($this->codeCoverage->getClass($class->getName()) ?? []);
+            
+            // Parse uses
+            if ($class->getParentClass() !== false) {
+                $classView->addUse($class->inNamespace());
+            }
+            
+            $interfaces = $class->getInterfaces();
+            foreach ($interfaces as $interface) {
+                $classView->addUse($interface->inNamespace());
+            }
+            
+            foreach ($this->loc as $line) {
+                $line = trim($line);
+                
+                if (substr($line, 0, 4) === 'use ') {
+                    $classView->addUse(substr($line, 4, -1));
+                }
+            }
 
             $methods = $class->getMethods();
             foreach ($methods as $method) {
@@ -148,20 +167,25 @@ class DocumentationController
         if ($comment->isEmpty()) {
             $this->withoutComment[] = $className . '-' . $method->getShortName();
         }
-
-        File::put($methodView->getPath(), $methodView->render());
+        
+        mkdir(dirname($methodView->getPath()), 0777, true);
+        file_put_contents($methodView->getPath(), $methodView->render());
     }
 
     private function createBaseFiles()
     {
         try {
-            File::copy(__DIR__ . '/../../Theme/css/styles.css', $this->destination . '/css/styles.css', true);
-            File::copy(__DIR__ . '/../../Theme/js/documentor.js', $this->destination . '/js/documentor.js', true);
+            mkdir($this->destination . '/css/', 0777, true);
+            mkdir($this->destination . '/js/', 0777, true);
+            mkdir($this->destination . '/img/', 0777, true);
 
-            $images = new Directory(__DIR__ . '/../../Theme/img');
+            copy(__DIR__ . '/../../Theme/css/styles.css', $this->destination . '/css/styles.css');
+            copy(__DIR__ . '/../../Theme/js/documentor.js', $this->destination . '/js/documentor.js');
+
+            $images = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../Theme/img'));
             foreach ($images as $image) {
-                if ($image instanceof File) {
-                    File::copy($image->getPath(), $this->destination . '/img/' . $image->getName() . '.' . $image->getExtension(), true);
+                if ($image->isFile()) {
+                    copy($image->getPathname(), $this->destination . '/img/' . $image->getFilename());
                 }
             }
         } catch (\Exception $e) {

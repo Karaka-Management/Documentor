@@ -3,9 +3,6 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\GuideView;
-use phpOMS\System\File\Local\Directory;
-use phpOMS\System\File\Local\File;
-use phpOMS\Utils\StringUtils;
 
 class GuideController
 {
@@ -19,45 +16,47 @@ class GuideController
         $this->base        = $base;
 
         if (isset($path)) {
-            $dir       = new Directory($path);
+            $dir       = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
             $this->nav = $this->createNavigation($dir, $path);
             $this->parse($dir, $path);
         }
     }
 
-    private function createNavigation(Directory $dirs, string $base) : array
+    private function createNavigation(\RecursiveIteratorIterator $dirs, string $base) : array
     {
         $nav = [];
         foreach ($dirs as $file) {
-            if ($file instanceof Directory) {
-                $nav[$file->getName()] = $this->createNavigation($file, $base);
-            } elseif ($file instanceof File && $file->getExtension() === 'md' && !StringUtils::startsWith($file->getName(), 'README') && !StringUtils::startsWith($file->getName(), 'SUMMARY') && !StringUtils::startsWith($file->getName(), 'index')) {
-                $nav[] = ['path' => substr($file->getDirPath(), strlen($base)), 'name' => $file->getName()];
+            if ($file->isDir()) {
+                $nav[$file->getFilename()] = $this->createNavigation($file, $base);
+            } elseif ($file->isFile() && $file->getExtension() === 'md' && substr($file->getFilename(), 0, strlen('README')) !== 'README' && substr($file->getFilename(), 0, strlen('SUMMARY')) !== 'SUMMARY' && substr($file->getFilename(), 0, strlen('index')) !== 'index') {
+                $nav[] = ['path' => substr($file->getPath(), strlen($base)), 'name' => $file->getFilename()];
             }
         }
 
         return $nav;
     }
 
-    private function parse(Directory $dirs, string $base)
+    private function parse(\RecursiveIteratorIterator $dirs, string $base)
     {
         foreach ($dirs as $file) {
-            if ($file instanceof Directory) {
+            if ($file->isDir()) {
                 $this->parse($file, $base);
-            } elseif ($file instanceof File) {
+            } elseif ($file->isFile()) {
                 if ($file->getExtension() === 'md') {
                     $guideView = new GuideView();
                     $guideView->setTemplate('/Documentor/src/Theme/guide');
                     $guideView->setBase($this->base);
-                    $guideView->setPath($this->destination . '/guide/' . substr($file->getDirPath(), strlen($base)) . '/' . $file->getName() . '.html');
+                    $guideView->setPath($this->destination . '/guide/' . substr($file->getPath(), strlen($base)) . '/' . $file->getFilename() . '.html');
                     $guideView->setSection('Guide');
                     $guideView->setTitle('Guide');
                     $guideView->setNavigation($this->nav);
-                    $guideView->setContent(file_get_contents($file->getPath()));
+                    $guideView->setContent(file_get_contents($file->getPathname()));
 
-                    File::put($guideView->getPath(), $guideView->render());
+                    mkdir(dirname($guideView->getPath()), 0777, true);
+                    file_put_contents($guideView->getPath(), $guideView->render());
                 } else {
-                    File::copy($file->getPath(), $this->destination . '/guide/' . substr($file->getDirPath(), strlen($base)) . '/' . $file->getName());
+                    mkdir($this->destination . '/guide/' . substr($file->getPath(), strlen($base)) . '/', 0777, true);
+                    copy($file->Pathname(), $this->destination . '/guide/' . substr($file->getPath(), strlen($base)) . '/' . $file->getFilename());
                 }
             }
         }

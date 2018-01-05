@@ -10,7 +10,7 @@
 <table class="full">
     <caption>Methods</caption>
     <tbody>
-    <?php foreach($this->withoutComment as $method) : ?>
+    <?php foreach ($this->withoutComment as $method) : ?>
     <tr><td><a href="<?= $this->base . '/'. $method; ?>.html"><?= $method; ?></a>
     <?php endforeach; ?>
 </table>

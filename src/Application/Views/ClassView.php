@@ -7,6 +7,18 @@ use Reflection;
 
 class ClassView extends DocView
 {
+    private $uses = [];
+    
+    public function addUse(string $use)
+    {
+        $this->uses[] = $use;
+    }
+    
+    public function getUses() : array
+    {
+        return array_unique($this->uses);
+    }
+    
     public function getTop() : string
     {
         $abstract = $this->ref->isAbstract() ? 'abstract ' : '';
@@ -40,7 +52,7 @@ class ClassView extends DocView
     {
         $consts = $this->ref->getConstants();
         foreach ($consts as $name => $value) {
-            yield '    ' . $this->formatModifier('const') . ' ' . $this->formatVariable($name) . ' = ' . $this->formatValue($value) . ';';
+            yield '    ' . $this->formatModifier('const') . ' ' .$this->formatVariable($name) . ' = ' . $this->formatValue($value) . ';';
         }
     }
 

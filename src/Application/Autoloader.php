@@ -45,7 +45,7 @@ class Autoloader
     {
         if (($classNew = self::exists($class)) !== false) {
             /** @noinspection PhpIncludeInspection */
-            include_once __DIR__ . '/../../../' . $classNew . '.php';
+            include_once $classNew;
         } else {
             throw new \Exception($class);
         }
@@ -66,7 +66,9 @@ class Autoloader
         $class = str_replace(['_', '\\'], DIRECTORY_SEPARATOR, $class);
 
         if (file_exists(__DIR__ . '/../../../' . $class . '.php')) {
-            return $class;
+            return __DIR__ . '/../../../' . $class . '.php';
+        } elseif (file_exists(dirname(Phar::running(false)) . '/../../../' . $class . '.php')) {
+            return dirname(Phar::running(false)) . '/../../../' . $class . '.php';
         }
 
         return false;

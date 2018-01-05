@@ -7,9 +7,6 @@ use Documentor\src\Application\Controllers\DocumentationController;
 use Documentor\src\Application\Controllers\GuideController;
 use Documentor\src\Application\Controllers\MainController;
 use Documentor\src\Application\Controllers\UnitTestController;
-use phpOMS\System\File\Local\Directory;
-use phpOMS\Utils\ArrayUtils;
-use phpOMS\Utils\StringUtils;
 
 class Application
 {
@@ -23,9 +20,9 @@ class Application
     {
         $this->setupHandlers();
 
-        $help        = ArrayUtils::getArg('-h', $argv);
-        $source      = ArrayUtils::getArg('-s', $argv);
-        $destination = ArrayUtils::getArg('-d', $argv);
+        $help        = ($key = array_search('-h', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
+        $source      = ($key = array_search('-s', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
+        $destination = ($key = array_search('-d', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
 
         if (isset($help) || !isset($source) || !isset($destination)) {
             $this->printUsage();
@@ -36,22 +33,38 @@ class Application
         }
     }
 
-    private function setupHandlers() /* : void */
+    private function setupHandlers()
     {
-        set_exception_handler(['\phpOMS\UnhandledHandler', 'exceptionHandler']);
-        set_error_handler(['\phpOMS\UnhandledHandler', 'errorHandler']);
-        register_shutdown_function(['\phpOMS\UnhandledHandler', 'shutdownHandler']);
+        set_exception_handler(function(\Throwable $e) { 
+            echo $e->getLine(), ': ' , $e->getMessage(); 
+        });
+
+        set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline) { 
+            if (!(error_reporting() & $errno)) {
+                echo $errline , ': ' , $errfile;
+            } 
+        });
+
+        register_shutdown_function(function() { 
+            $e = error_get_last(); 
+            
+            if (isset($e)) {
+                echo $e['line'] , ': ' , $e['message']; 
+            }
+        });
+
         mb_internal_encoding('UTF-8');
     }
 
     private function createDocumentation(string $source, string $destination, array $argv)
     {
-        $unitTest     = ArrayUtils::getArg('-u', $argv);
-        $codeCoverage = ArrayUtils::getArg('-c', $argv);
-        $guide        = ArrayUtils::getArg('-g', $argv);
-        $base         = ArrayUtils::getArg('-b', $argv) ?? $destination;
+        $unitTest     = ($key = array_search('-u', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
+        $codeCoverage = ($key = array_search('-c', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
+        $guide        = ($key = array_search('-g', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
+        $base         = ($key = array_search('-b', $argv)) === false || $key === count($argv) - 1 ? $destination : trim($argv[$key + 1], '" ');
         $base         = rtrim($base, '/\\');
-        $sources      = new Directory($source, '*');
+        
+        $sources      = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source));
 
         $this->mainController         = new MainController($destination, $base);
         $this->codeCoverageController = new CodeCoverageController($destination, $base, $codeCoverage);
@@ -75,12 +88,10 @@ class Application
         echo "\t" . '-b Base uri for web access (e.g. http://www.yoururl.com).' . "\n";
     }
 
-    private function parse(Directory $sources)
+    private function parse(\RecursiveIteratorIterator $sources)
     {
         foreach ($sources as $source) {
-            if ($source instanceof Directory) {
-                $this->parse($source);
-            } elseif (StringUtils::endsWith($source->getPath(), '.php')) {
+            if ($source->isFile() && (($temp = strlen($source->getPathname()) - strlen('.php')) >= 0 && strpos($source->getPathname(), '.php', $temp) !== false)) {
                 $this->docController->parse($source);
             }
         }

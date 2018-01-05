@@ -3,7 +3,6 @@
 namespace Documentor\src\Application\Controllers;
 
 use Documentor\src\Application\Views\BaseView;
-use phpOMS\System\File\Local\File;
 
 class MainController
 {
@@ -26,6 +25,7 @@ class MainController
         $mainView->setSection('Main');
         $mainView->setTitle('Main');
 
-        File::put($mainView->getPath(), $mainView->render());
+        mkdir(dirname($mainView->getPath()), 0777, true);
+        file_put_contents($mainView->getPath(), $mainView->render());
     }
 }

@@ -2,14 +2,44 @@
 
 namespace Documentor\src\Application\Views;
 
-use phpOMS\Views\ViewAbstract;
-
-class BaseView extends ViewAbstract
+class BaseView
 {
     protected $title = '';
     protected $base = '';
     protected $path = '';
     protected $section = '';
+    protected $template = '';
+    
+    public function setTemplate(string $template)
+    {
+        $this->template = $template;
+    }
+    
+    public function render(...$data)
+    {
+        $ob   = '';
+        $path = __DIR__ . '/../../../..' . $this->template . '.tpl.php';
+        
+        if (!file_exists($path)) {
+            throw new Exception($path);
+        }
+        
+        try {
+            ob_start();
+            /** @noinspection PhpIncludeInspection */
+            $includeData = include $path;
+            
+            $ob = ob_get_clean();
+            
+            if (is_array($includeData)) {
+                return $includeData;
+            }
+        } catch(\Throwable $e) {
+            echo $e->getMessage();
+        } finally {
+            return $ob;
+        }
+    }
 
     public function getSection()
     {
