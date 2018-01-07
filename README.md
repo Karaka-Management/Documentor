@@ -8,7 +8,7 @@ This documentation generator creates a html documentation for php classes based 
 
 ## Demo
 
-http://orange-management.github.io/docs/index.html (Guide not implemented)
+http://docs.orange-management.de (Guide not implemented)
 
 ## Usage
 
