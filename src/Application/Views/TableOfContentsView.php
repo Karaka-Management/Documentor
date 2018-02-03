@@ -4,17 +4,17 @@ namespace Documentor\src\Application\Views;
 
 class TableOfContentsView extends BaseView
 {
-	protected $stats = [];
+    protected $stats = [];
 
-	protected $withoutComment = [];
+    protected $withoutComment = [];
 
-	public function setStats(array $stats)
-	{
-		$this->stats = $stats;
-	}
+    public function setStats(array $stats)
+    {
+        $this->stats = $stats;
+    }
 
-	public function setWithoutComment(array $comment)
-	{
-		$this->withoutComment = $comment;
-	}
+    public function setWithoutComment(array $comment)
+    {
+        $this->withoutComment = $comment;
+    }
 }

@@ -4,7 +4,7 @@ namespace Documentor\src\Application\Views;
 
 class TestView extends BaseView
 {
-    protected $test = [];
+    protected $test    = [];
     protected $results = [];
 
     public function setTest(array $test)

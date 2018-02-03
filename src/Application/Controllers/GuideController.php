@@ -7,8 +7,8 @@ use Documentor\src\Application\Views\GuideView;
 class GuideController
 {
     private $destination = '';
-    private $base = '';
-    private $nav = [];
+    private $base        = '';
+    private $nav         = [];
 
     public function __construct(string $destination, string $base, string $path = null)
     {

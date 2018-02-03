@@ -10,14 +10,14 @@ use Documentor\src\Application\Views\TableOfContentsView;
 
 class DocumentationController
 {
-    private $destination = '';
-    private $base = '';
-    private $sourcePath = '';
-    private $codeCoverage = null;
-    private $unitTest = null;
-    private $files = [];
-    private $loc = [];
-    private $stats = ['loc' => 0, 'classes' => 0, 'traits' => 0, 'interfaces' => 0, 'abstracts' => 0, 'methods' => 0];
+    private $destination    = '';
+    private $base           = '';
+    private $sourcePath     = '';
+    private $codeCoverage   = null;
+    private $unitTest       = null;
+    private $files          = [];
+    private $loc            = [];
+    private $stats          = ['loc' => 0, 'classes' => 0, 'traits' => 0, 'interfaces' => 0, 'abstracts' => 0, 'methods' => 0];
     private $withoutComment = [];
 
     public function __construct(string $destination, string $base, string $source, CodeCoverageController $codeCoverage, UnitTestController $unitTest)
@@ -75,7 +75,7 @@ class DocumentationController
         try {
             include_once $path;
 
-            $this->loc = file($path);
+            $this->loc           = file($path);
             $this->stats['loc'] += count($this->loc);
 
             $className = substr($path, strlen(rtrim(dirname($this->sourcePath), '/\\')), -4);

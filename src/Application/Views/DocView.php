@@ -6,10 +6,10 @@ use Documentor\src\Application\Models\Comment;
 
 class DocView extends BaseView
 {
-    protected $ref = null;
-    protected $comment = null;
+    protected $ref      = null;
+    protected $comment  = null;
     protected $coverage = [];
-    protected $code = '';
+    protected $code     = '';
 
     public function __construct()
     {

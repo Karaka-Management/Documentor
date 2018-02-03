@@ -10,11 +10,11 @@ use Documentor\src\Application\Controllers\UnitTestController;
 
 class Application
 {
-    private $docController = null;
+    private $docController          = null;
     private $codeCoverageController = null;
-    private $unitTestController = null;
-    private $guideController = null;
-    private $mainController = null;
+    private $unitTestController     = null;
+    private $guideController        = null;
+    private $mainController         = null;
 
     public function __construct(array $argv)
     {
@@ -63,7 +63,6 @@ class Application
         $guide        = ($key = array_search('-g', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
         $base         = ($key = array_search('-b', $argv)) === false || $key === count($argv) - 1 ? $destination : trim($argv[$key + 1], '" ');
         $base         = rtrim($base, '/\\');
-        
         $sources      = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source));
 
         $this->mainController         = new MainController($destination, $base);

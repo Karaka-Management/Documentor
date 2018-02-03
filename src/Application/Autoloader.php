@@ -15,7 +15,7 @@
 
 namespace Documentor\src\Application;
 
-spl_autoload_register('\Documentor\src\Application\Autoloader::default_autoloader');
+spl_autoload_register('\Documentor\src\Application\Autoloader::defaultAutoloader');
 
 /**
  * Autoloader class.
@@ -41,7 +41,7 @@ class Autoloader
      *
      * @since  1.0.0
      */
-    public static function default_autoloader(string $class)
+    public static function defaultAutoloader(string $class)
     {
         if (($classNew = self::exists($class)) !== false) {
             /** @noinspection PhpIncludeInspection */
@@ -73,5 +73,4 @@ class Autoloader
 
         return false;
     }
-
 }
