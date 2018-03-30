@@ -4,23 +4,21 @@ namespace Documentor\src\Application\Models;
 
 class Comment
 {
-    private $version = null;
-    private $php = 'PHP 7.1';
+    private $version     = null;
     private $description = null;
-    private $license = null;
-    private $var = null;
-    private $package = null;
-    private $since = null;
-    private $deprecated = null;
-    private $todo = [];
-    private $link = [];
-    private $param = [];
-    private $throws = null;
-    private $return = null;
-    private $title = null;
-    private $latex = [];
-    private $example = [];
-    private $empty = true;
+    private $license     = null;
+    private $var         = null;
+    private $package     = null;
+    private $since       = null;
+    private $deprecated  = null;
+    private $todo        = [];
+    private $link        = [];
+    private $param       = [];
+    private $throws      = null;
+    private $return      = null;
+    private $latex       = [];
+    private $example     = [];
+    private $empty       = true;
 
     public function __construct(string $comment)
     {

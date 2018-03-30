@@ -6,16 +6,16 @@ use Documentor\src\Application\Views\CoverageView;
 
 class CodeCoverageController
 {
-    private $destination = '';
-    private $base = '';
-    private $coverage = [];
-    private $totalCrap = 0;
+    private $destination     = '';
+    private $base            = '';
+    private $coverage        = [];
+    private $totalCrap       = 0;
     private $totalComplexity = 0;
 
     public function __construct(string $destination, string $base, string $path = null)
     {
         $this->destination = $destination;
-        $this->base = $base;
+        $this->base        = $base;
 
         if (isset($path)) {
             $this->parse($path);
@@ -70,7 +70,7 @@ class CodeCoverageController
                             $this->coverage[$class]['function'] = [];
                         }
 
-                        $this->totalCrap += (float) $line->getAttribute('crap');
+                        $this->totalCrap                           += (float) $line->getAttribute('crap');
                         $this->coverage[$class]['metrics']['crap'] += (float) $line->getAttribute('crap');
 
                         $this->coverage[$class]['function'][$line->getAttribute('name')] = [

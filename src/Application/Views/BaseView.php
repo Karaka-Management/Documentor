@@ -4,10 +4,10 @@ namespace Documentor\src\Application\Views;
 
 class BaseView
 {
-    protected $title = '';
-    protected $base = '';
-    protected $path = '';
-    protected $section = '';
+    protected $title    = '';
+    protected $base     = '';
+    protected $path     = '';
+    protected $section  = '';
     protected $template = '';
     
     public function setTemplate(string $template)

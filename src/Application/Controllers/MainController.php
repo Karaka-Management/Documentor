@@ -7,7 +7,7 @@ use Documentor\src\Application\Views\BaseView;
 class MainController
 {
     private $destination = '';
-    private $base = '';
+    private $base        = '';
 
     public function __construct(string $destination, string $base)
     {

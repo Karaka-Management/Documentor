@@ -7,8 +7,8 @@ use Documentor\src\Application\Views\TestView;
 class UnitTestController
 {
     private $destination = '';
-    private $base = '';
-    private $test = ['tests' => 0, 'assertions' => 0, 'failures' => 0, 'errors' => 0, 'empty' => 0, 'time' => 0];
+    private $base        = '';
+    private $test        = ['tests' => 0, 'assertions' => 0, 'failures' => 0, 'errors' => 0, 'empty' => 0, 'time' => 0];
     private $testResults = ['errors' => [], 'failures' => []];
 
     public function __construct(string $destination, string $base, string $path = null)

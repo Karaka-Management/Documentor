@@ -10,11 +10,11 @@ use Documentor\src\Application\Controllers\UnitTestController;
 
 class Application
 {
-    private $docController = null;
+    private $docController          = null;
     private $codeCoverageController = null;
-    private $unitTestController = null;
-    private $guideController = null;
-    private $mainController = null;
+    private $unitTestController     = null;
+    private $guideController        = null;
+    private $mainController         = null;
 
     public function __construct(array $argv)
     {
@@ -63,7 +63,6 @@ class Application
         $guide        = ($key = array_search('-g', $argv)) === false || $key === count($argv) - 1 ? null : trim($argv[$key + 1], '" ');
         $base         = ($key = array_search('-b', $argv)) === false || $key === count($argv) - 1 ? $destination : trim($argv[$key + 1], '" ');
         $base         = rtrim($base, '/\\');
-        
         $sources      = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source));
 
         $this->mainController         = new MainController($destination, $base);
@@ -91,7 +90,10 @@ class Application
     private function parse(\RecursiveIteratorIterator $sources)
     {
         foreach ($sources as $source) {
-            if ($source->isFile() && (($temp = strlen($source->getPathname()) - strlen('.php')) >= 0 && strpos($source->getPathname(), '.php', $temp) !== false)) {
+            if ($source->isFile() 
+                && (($temp = strlen($source->getPathname()) - strlen('.php')) >= 0 && strpos($source->getPathname(), '.php', $temp) !== false)
+                && (stripos($source->getPathname(), '/test') === false && stripos($source->getPathname(), '\\test') === false)
+            ) {
                 $this->docController->parse($source);
             }
         }
