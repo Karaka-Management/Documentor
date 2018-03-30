@@ -90,7 +90,10 @@ class Application
     private function parse(\RecursiveIteratorIterator $sources)
     {
         foreach ($sources as $source) {
-            if ($source->isFile() && (($temp = strlen($source->getPathname()) - strlen('.php')) >= 0 && strpos($source->getPathname(), '.php', $temp) !== false)) {
+            if ($source->isFile() 
+                && (($temp = strlen($source->getPathname()) - strlen('.php')) >= 0 && strpos($source->getPathname(), '.php', $temp) !== false)
+                && (stripos($source->getPathname(), '/test') === false && stripos($source->getPathname(), '\\test') === false)
+            ) {
                 $this->docController->parse($source);
             }
         }
