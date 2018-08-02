@@ -8,7 +8,7 @@ This documentation generator creates a html documentation for php classes based 
 
 ## Demo
 
-http://orange-management.github.io/docs/index.html (Guide not implemented)
+http://docs.orange-management.de (Guide not implemented)
 
 ## Usage
 
@@ -21,7 +21,7 @@ php Documentor/src/index.php -h
 The default usage would be:
 
 ```
-php Documentor/src/index.php -s <SOURCE_PATH> -d <DESTINATION_PATH> -c <COVERAGE_PATH>
+php Documentor/src/index.php -s <SOURCE_PATH> -d <DESTINATION_PATH> -c <COVERAGE_PATH> -b <BASE_URL>
 ```
 
 The documentation starts to shine when you use a unit test log as well as the coverage report and a html guide. The default template does not hide these page if they are missing and the overall experience will be not as good.
