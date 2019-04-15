@@ -6,17 +6,6 @@ spl_autoload_register('\Documentor\src\Application\Autoloader::defaultAutoloader
 class Autoloader
 {
 
-    /**
-     * Loading classes by namespace + class name.
-     *
-     * @param string $class Class path
-     *
-     * @return void
-     *
-     * @throws \Exception
-     *
-     * @since  1.0.0
-     */
     public static function defaultAutoloader(string $class)
     {
         if (($classNew = self::exists($class)) !== false) {
@@ -27,15 +16,6 @@ class Autoloader
         }
     }
 
-    /**
-     * Check if class exists.
-     *
-     * @param string $class Class path
-     *
-     * @return false|string
-     *
-     * @since  1.0.0
-     */
     public static function exists(string $class)
     {
         $class = ltrim($class, '\\');
