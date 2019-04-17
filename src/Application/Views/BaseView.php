@@ -21,7 +21,7 @@ class BaseView
         $path = __DIR__ . '/../../../..' . $this->template . '.tpl.php';
         
         if (!file_exists($path)) {
-            throw new Exception($path);
+            throw new \Exception($path);
         }
         
         try {
