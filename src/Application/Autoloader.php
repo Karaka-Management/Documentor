@@ -23,8 +23,8 @@ class Autoloader
 
         if (file_exists(__DIR__ . '/../../../' . $class . '.php')) {
             return __DIR__ . '/../../../' . $class . '.php';
-        } elseif (file_exists(dirname(Phar::running(false)) . '/../../../' . $class . '.php')) {
-            return dirname(Phar::running(false)) . '/../../../' . $class . '.php';
+        } elseif (file_exists(dirname(\Phar::running(false)) . '/../../../' . $class . '.php')) {
+            return dirname(\Phar::running(false)) . '/../../../' . $class . '.php';
         }
 
         return false;
