@@ -46,16 +46,16 @@ The following key words hold special meaning in the code documentation.
 
 Coverage
 
-![alt tag](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/coverage.png)
+![coverage](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/coverage.png)
 
 Tests
 
-![alt tag](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/test.png)
+![test](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/test.png)
 
 Class documentation
 
-![alt tag](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/class.png)
+![class](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/class.png)
 
 Method documentation
 
-![alt tag](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/method.png)
+![method](https://raw.githubusercontent.com/Orange-Management/Documentor/master/img/method.png)
