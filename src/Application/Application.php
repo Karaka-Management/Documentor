@@ -26,11 +26,13 @@ class Application
 
         if (isset($help) || !isset($source) || !isset($destination)) {
             $this->printUsage();
-        } else {
-            $destination = rtrim($destination, '/\\');
-            $source      = rtrim($source, '/\\');
-            $this->createDocumentation($source, $destination, $argv);
+            
+            return;
         }
+        
+        $destination = rtrim($destination, '/\\');
+        $source      = rtrim($source, '/\\');
+        $this->createDocumentation($source, $destination, $argv);
     }
 
     private function setupHandlers()
