@@ -4,9 +4,9 @@ namespace Documentor\src\Application\Views;
 
 class TableOfContentsView extends BaseView
 {
-    protected $stats = [];
+    protected array $stats = [];
 
-    protected $withoutComment = [];
+    protected array $withoutComment = [];
 
     public function setStats(array $stats)
     {
