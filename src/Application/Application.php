@@ -10,11 +10,11 @@ use Documentor\src\Application\Controllers\UnitTestController;
 
 class Application
 {
-    private $docController          = null;
-    private $codeCoverageController = null;
-    private $unitTestController     = null;
-    private $guideController        = null;
-    private $mainController         = null;
+    private ?DocumentationController $docController         = null;
+    private ?CodeCoverageController $codeCoverageController = null;
+    private ?UnitTestController $unitTestController         = null;
+    private ?GuideController $guideController               = null;
+    private ?MainController $mainController                 = null;
 
     public function __construct(array $argv)
     {
