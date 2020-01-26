@@ -4,26 +4,30 @@ namespace Documentor\src\Application\Models;
 
 class Comment
 {
-    private $version     = null;
-    private $description = null;
-    private $license     = null;
-    private $var         = null;
-    private $package     = null;
-    private $since       = null;
-    private $deprecated  = null;
-    private $todo        = [];
-    private $link        = [];
-    private $param       = [];
-    private $throws      = null;
-    private $return      = null;
-    private $latex       = [];
-    private $example     = [];
-    private $empty       = true;
+    private ?string $version     = null;
+    private ?string $description = null;
+    private ?string $license     = null;
+    private ?string $var         = null;
+    private ?string $package     = null;
+    private ?string $since       = null;
+    private ?string $deprecated  = null;
+    
+    private array $todo  = [];
+    private array $link  = [];
+    private array $param = [];
+    
+    private $throws = null;
+    private $return = null;
+    
+    private array $latex   = [];
+    private array $example = [];
+    
+    private bool $empty = true;
 
     public function __construct(string $comment)
     {
-        $comment = str_replace("\r\n", "\n", $comment);
-        $comment = str_replace("\t", "    ", $comment);
+        $comment = \str_replace("\r\n", "\n", $comment);
+        $comment = \str_replace("\t", "    ", $comment);
         $this->parse($comment);
     }
 
@@ -53,24 +57,24 @@ class Comment
         $matches = [];
         $pos     = 0;
 
-        while (($pos = strpos($comment, $key, $pos)) !== false) {
-            $match = trim(substr($comment, $pos + strlen($key), (strpos($comment, "\n", $pos + strlen($key))) - $pos - strlen($key)));
+        while (($pos = \strpos($comment, $key, $pos)) !== false) {
+            $match = \trim(\substr($comment, $pos + \strlen($key), (\strpos($comment, "\n", $pos + \strlen($key))) - $pos - \strlen($key)));
 
             if (isset($match[0]) && $match[0] === '`') {
-                $start = strpos($comment, '`', $pos);
-                $end   = strpos($comment, '`', $start + 1);
+                $start = \strpos($comment, '`', $pos);
+                $end   = \strpos($comment, '`', $start + 1);
 
-                $match = substr($comment, $start + 1, $end - $start - 2);
-                $lines = explode("\n", $match);
+                $match = \substr($comment, $start + 1, $end - $start - 2);
+                $lines = \explode("\n", $match);
 
                 foreach ($lines as $key => $line) {
-                    $lines[$key] = trim($line, ' *');
+                    $lines[$key] = \trim($line, ' *');
                 }
 
-                $match = implode(' ', $lines);
+                $match = \implode(' ', $lines);
             }
 
-            $match = trim($match);
+            $match = \trim($match);
 
             if (!empty($match)) {
                 $matches[] = $match;
@@ -85,17 +89,17 @@ class Comment
     private function parseParameter(string $comment) : array
     {
         $params = $this->findKey('@param', $comment);
-        $params = preg_replace('!\s+!', ' ', $params);
+        $params = \preg_replace('!\s+!', ' ', $params);
         $parsed = [];
 
         foreach ($params as $param) {
-            $param = explode(' ', $param);
+            $param = \explode(' ', $param);
 
-            if (count($param) > 2) {
+            if (\count($param) > 2) {
                 $parsed[] = [
-                    'type' => array_shift($param),
-                    'var'  => array_shift($param),
-                    'desc' => implode(' ', $param),
+                    'type' => \array_shift($param),
+                    'var'  => \array_shift($param),
+                    'desc' => \implode(' ', $param),
                 ];
             }
         }
@@ -105,37 +109,37 @@ class Comment
 
     private function parseDescription(string $comment) : string
     {
-        $lines       = explode("\n", $comment);
+        $lines       = \explode("\n", $comment);
         $description = '';
 
         foreach ($lines as $key => $line) {
-            $line = substr($line, strpos($line, '*') + 2);
+            $line = \substr($line, \strpos($line, '*') + 2);
 
             if (isset($line[0]) && ($line[0] === '@' || $line[0] === '{')) {
                 break;
             }
 
             if ($line !== '') {
-                $description .= htmlspecialchars($line) . "\n";
+                $description .= \htmlspecialchars($line) . "\n";
             }
         }
 
-        return trim($description, "\n ");
+        return \trim($description, "\n ");
     }
 
     private function parseThrows(string $comment) : array
     {
         $throws = $this->findKey('@throws', $comment);
-        $throws = preg_replace('!\s+!', ' ', $throws);
+        $throws = \preg_replace('!\s+!', ' ', $throws);
         $parsed = [];
 
         foreach ($throws as $throw) {
-            $throw = explode(' ', $throw);
+            $throw = \explode(' ', $throw);
 
-            if (count($throw) > 1) {
+            if (\count($throw) > 1) {
                 $parsed[] = [
-                    'type' => array_shift($throw),
-                    'desc' => implode(' ', $throw),
+                    'type' => \array_shift($throw),
+                    'desc' => \implode(' ', $throw),
                 ];
             }
         }
@@ -151,9 +155,9 @@ class Comment
             return null;
         }
 
-        $return = explode(' ', $return);
+        $return = \explode(' ', $return);
 
-        return ['type' => array_shift($return), 'desc' => implode(' ', $return) ?? null];
+        return ['type' => \array_shift($return), 'desc' => \implode(' ', $return) ?? null];
     }
 
     public function getDescription()
