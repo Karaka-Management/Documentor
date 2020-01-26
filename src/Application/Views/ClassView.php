@@ -7,7 +7,7 @@ use Reflection;
 
 class ClassView extends DocView
 {
-    private $uses = [];
+    private array $uses = [];
     
     public function addUse(string $use)
     {
@@ -16,7 +16,7 @@ class ClassView extends DocView
     
     public function getUses() : array
     {
-        return array_unique($this->uses);
+        return \array_unique($this->uses);
     }
     
     public function getTop() : string
@@ -34,7 +34,7 @@ class ClassView extends DocView
             $implements .= $this->linkType($interface, $interface->getShortName()) . ', ';
         }
 
-        $implements = $implements !== '' ? 'implements ' . rtrim($implements, ', ') : '';
+        $implements = $implements !== '' ? 'implements ' . \rtrim($implements, ', ') : '';
 
         return trim($this->formatClassType($abstract . $type) . $this->formatClassName($name) . $extends . $implements);
     }
@@ -44,7 +44,7 @@ class ClassView extends DocView
         $members = $this->ref->getProperties();
         foreach ($members as $member) {
             $type = new Comment($member->getDocComment());
-            yield '    ' . $this->formatModifier(implode(' ', Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable('$' . $member->getName()) . ';';
+            yield '    ' . $this->formatModifier(implode(' ', \Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable('$' . $member->getName()) . ';';
         }
     }
 
@@ -72,9 +72,9 @@ class ClassView extends DocView
                     . ', ';
             }
 
-            $methodString = "    " . $this->formatModifier(implode(' ', Reflection::getModifierNames($method->getModifiers())))
+            $methodString = "    " . $this->formatModifier(\implode(' ', Reflection::getModifierNames($method->getModifiers())))
                 . ' ' . $this->formatFunction() . ' ' . $this->linkFunction($this->ref->getName() . '-' . $method->getShortName(), $method->getShortName())
-                . '(' . trim($parameterString, ', ') . ')'
+                . '(' . \trim($parameterString, ', ') . ')'
                 . ($method->hasReturnType() ? ' : ' . $this->linkType($method->getReturnType()) : '');
 
             yield $methodString;
