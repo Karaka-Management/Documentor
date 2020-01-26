@@ -6,9 +6,10 @@ use Documentor\src\Application\Views\GuideView;
 
 class GuideController
 {
-    private $destination = '';
-    private $base        = '';
-    private $nav         = [];
+    private string $destination = '';
+    private string $base        = '';
+    
+    private array $nav = [];
 
     public function __construct(string $destination, string $base, string $path = null)
     {
@@ -28,8 +29,8 @@ class GuideController
         foreach ($dirs as $file) {
             if ($file->isDir()) {
                 $nav[$file->getFilename()] = $this->createNavigation($file, $base);
-            } elseif ($file->isFile() && $file->getExtension() === 'md' && substr($file->getFilename(), 0, strlen('README')) !== 'README' && substr($file->getFilename(), 0, strlen('SUMMARY')) !== 'SUMMARY' && substr($file->getFilename(), 0, strlen('index')) !== 'index') {
-                $nav[] = ['path' => substr($file->getPath(), strlen($base)), 'name' => $file->getFilename()];
+            } elseif ($file->isFile() && $file->getExtension() === 'md' && \substr($file->getFilename(), 0, \strlen('README')) !== 'README' && \substr($file->getFilename(), 0, \strlen('SUMMARY')) !== 'SUMMARY' && \substr($file->getFilename(), 0, \strlen('index')) !== 'index') {
+                $nav[] = ['path' => \substr($file->getPath(), \strlen($base)), 'name' => $file->getFilename()];
             }
         }
 
@@ -46,17 +47,17 @@ class GuideController
                     $guideView = new GuideView();
                     $guideView->setTemplate('/Documentor/src/Theme/guide');
                     $guideView->setBase($this->base);
-                    $guideView->setPath($this->destination . '/guide/' . substr($file->getPath(), strlen($base)) . '/' . $file->getFilename() . '.html');
+                    $guideView->setPath($this->destination . '/guide/' . \substr($file->getPath(), strlen($base)) . '/' . $file->getFilename() . '.html');
                     $guideView->setSection('Guide');
                     $guideView->setTitle('Guide');
                     $guideView->setNavigation($this->nav);
                     $guideView->setContent(file_get_contents($file->getPathname()));
 
-                    mkdir(dirname($guideView->getPath()), 0777, true);
-                    file_put_contents($guideView->getPath(), $guideView->render());
+                    \mkdir(dirname($guideView->getPath()), 0777, true);
+                    \file_put_contents($guideView->getPath(), $guideView->render());
                 } else {
-                    mkdir($this->destination . '/guide/' . substr($file->getPath(), strlen($base)) . '/', 0777, true);
-                    copy($file->Pathname(), $this->destination . '/guide/' . substr($file->getPath(), strlen($base)) . '/' . $file->getFilename());
+                    \mkdir($this->destination . '/guide/' . \substr($file->getPath(), \strlen($base)) . '/', 0777, true);
+                    \copy($file->Pathname(), $this->destination . '/guide/' . substr($file->getPath(), \strlen($base)) . '/' . $file->getFilename());
                 }
             }
         }
