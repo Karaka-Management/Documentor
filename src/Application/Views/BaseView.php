@@ -4,11 +4,11 @@ namespace Documentor\src\Application\Views;
 
 class BaseView
 {
-    protected $title    = '';
-    protected $base     = '';
-    protected $path     = '';
-    protected $section  = '';
-    protected $template = '';
+    protected string $title    = '';
+    protected string $base     = '';
+    protected string $path     = '';
+    protected string $section  = '';
+    protected string $template = '';
     
     public function setTemplate(string $template)
     {
@@ -25,13 +25,13 @@ class BaseView
         }
         
         try {
-            ob_start();
+            \ob_start();
             /** @noinspection PhpIncludeInspection */
             $includeData = include $path;
             
-            $ob = ob_get_clean();
+            $ob = \ob_get_clean();
             
-            if (is_array($includeData)) {
+            if (\is_array($includeData)) {
                 return $includeData;
             }
         } catch(\Throwable $e) {
@@ -63,7 +63,7 @@ class BaseView
 
     public function setBase(string $path)
     {
-        $this->base = str_replace('\\', '/', $path);
+        $this->base = \str_replace('\\', '/', $path);
     }
 
     public function getPath() : string
