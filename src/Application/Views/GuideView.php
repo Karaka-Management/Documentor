@@ -4,8 +4,9 @@ namespace Documentor\src\Application\Views;
 
 class GuideView extends BaseView
 {
-    protected $nav     = [];
-    protected $content = '';
+    protected array $nav = [];
+    
+    protected string $content = '';
 
     public function setContent(string $content)
     {
