@@ -6,10 +6,11 @@ use Documentor\src\Application\Views\TestView;
 
 class UnitTestController
 {
-    private $destination = '';
-    private $base        = '';
-    private $test        = ['tests' => 0, 'assertions' => 0, 'failures' => 0, 'errors' => 0, 'empty' => 0, 'time' => 0];
-    private $testResults = ['errors' => [], 'failures' => []];
+    private string $destination = '';
+    private string $base        = '';
+    
+    private array $test        = ['tests' => 0, 'assertions' => 0, 'failures' => 0, 'errors' => 0, 'empty' => 0, 'time' => 0];
+    private array $testResults = ['errors' => [], 'failures' => []];
 
     public function __construct(string $destination, string $base, string $path = null)
     {
@@ -36,7 +37,7 @@ class UnitTestController
     private function parse(string $path)
     {
         $dom = new \DOMDocument();
-        $dom->loadXML(file_get_contents($path));
+        $dom->loadXML(\file_get_contents($path));
         $root                     = $dom->documentElement->getElementsByTagName('testsuite')[0];
         $this->test['tests']      = $root->getAttribute('tests');
         $this->test['assertions'] = $root->getAttribute('assertions');
@@ -74,7 +75,7 @@ class UnitTestController
         $testView->setTest($this->test);
         $testView->setResults($this->testResults);
         
-        mkdir(dirname($testView->getPath()), 0777, true);
-        file_put_contents($testView->getPath(), $testView->render());
+        \mkdir(dirname($testView->getPath()), 0777, true);
+        \file_put_contents($testView->getPath(), $testView->render());
     }
 }
