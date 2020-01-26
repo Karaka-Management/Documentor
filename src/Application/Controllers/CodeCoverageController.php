@@ -6,11 +6,13 @@ use Documentor\src\Application\Views\CoverageView;
 
 class CodeCoverageController
 {
-    private $destination     = '';
-    private $base            = '';
-    private $coverage        = [];
-    private $totalCrap       = 0;
-    private $totalComplexity = 0;
+    private string $destination = '';
+    private string $base        = '';
+    
+    private array $coverage = [];
+    
+    private int $totalCrap       = 0;
+    private int $totalComplexity = 0;
 
     public function __construct(string $destination, string $base, string $path = null)
     {
@@ -37,7 +39,7 @@ class CodeCoverageController
     private function parse(string $path)
     {
         $dom = new \DOMDocument();
-        $dom->loadXML(file_get_contents($path));
+        $dom->loadXML(\file_get_contents($path));
         $files = $dom->getElementsByTagName('file');
 
         foreach ($files as $file) {
@@ -139,12 +141,12 @@ class CodeCoverageController
     {
         $uncovered = [];
         foreach ($this->coverage as $key => $class) {
-            if (count($uncovered) < $limit) {
+            if (\count($uncovered) < $limit) {
                 $uncovered[] = ['class' => $key, 'uncovered' => $class['metrics']['methods'] - $class['metrics']['coveredmethods']];
-                usort($uncovered, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortUncovered']);
+                \usort($uncovered, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortUncovered']);
             } elseif ($uncovered[$limit - 1]['uncovered'] < $class['metrics']['methods'] - $class['metrics']['coveredmethods']) {
                 $uncovered[$limit - 1] = ['class' => $key, 'uncovered' => $class['metrics']['methods'] - $class['metrics']['coveredmethods']];
-                usort($uncovered, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortUncovered']);
+                \usort($uncovered, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortUncovered']);
             }
         }
 
@@ -166,12 +168,12 @@ class CodeCoverageController
         foreach ($this->coverage as $key => $class) {
             if (isset($class['function'])) {
                 foreach ($class['function'] as $method => $crapValue) {
-                    if (count($crap) < $limit) {
+                    if (\count($crap) < $limit) {
                         $crap[] = ['class' => $key, 'method' => $method, 'crap' => $crapValue['crap']];
-                        usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+                        \usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
                     } elseif ($crap[$limit - 1]['crap'] < $crapValue['crap']) {
                         $crap[$limit - 1] = ['class' => $key, 'method' => $method, 'crap' => $crapValue['crap']];
-                        usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+                        \usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
                     }
                 }
             }
@@ -184,12 +186,12 @@ class CodeCoverageController
     {
         $crap = [];
         foreach ($this->coverage as $key => $class) {
-            if (count($crap) < $limit) {
+            if (\count($crap) < $limit) {
                 $crap[] = ['class' => $key, 'crap' => $class['metrics']['crap']];
-                usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+                \usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
             } elseif ($crap[$limit - 1]['crap'] < $class['metrics']['crap']) {
                 $crap[$limit - 1] = ['class' => $key, 'crap' => $class['metrics']['crap']];
-                usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
+                \usort($crap, ['Documentor\src\Application\Controllers\CodeCoverageController', 'sortCrap']);
             }
         }
 
@@ -215,7 +217,7 @@ class CodeCoverageController
         $coverageView->setComplexity($this->totalComplexity);
         $coverageView->setCrap($this->totalCrap);
         
-        mkdir(dirname($coverageView->getPath()), 0777, true);
-        file_put_contents($coverageView->getPath(), $coverageView->render());
+        \mkdir(\dirname($coverageView->getPath()), 0777, true);
+        \file_put_contents($coverageView->getPath(), $coverageView->render());
     }
 }
