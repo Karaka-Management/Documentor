@@ -6,10 +6,13 @@ use Documentor\src\Application\Models\Comment;
 
 class DocView extends BaseView
 {
-    protected $ref      = null;
-    protected $comment  = null;
-    protected $coverage = [];
-    protected $code     = '';
+    protected $ref = null;
+    
+    protected ?Comment $comment = null;
+    
+    protected array $coverage = [];
+    
+    protected string $code = '';
 
     public function __construct()
     {
@@ -33,11 +36,11 @@ class DocView extends BaseView
 
     public function setCode(string $code)
     {
-        $trim  = strlen($code) - strlen(ltrim($code, ' '));
-        $lines = explode("\n", $code);
+        $trim  = \strlen($code) - \strlen(ltrim($code, ' '));
+        $lines = \explode("\n", $code);
 
         foreach ($lines as $key => $line) {
-            $lines[$key] = substr($line, $trim);
+            $lines[$key] = \substr($line, $trim);
         }
 
         $this->code = implode("\n", $lines);
@@ -70,7 +73,7 @@ class DocView extends BaseView
             return $this->formatType($type->getShortName());
         } elseif ($type === 'string' || $type === 'int' || $type === 'float' || $type === 'bool' || $type === 'array') {
             return $this->formatType($type);
-        } elseif (strpos($type, '&') !== false || strpos($type, '[') !== false | strpos($type, '<') !== false) {
+        } elseif (\strpos($type, '&') !== false || \strpos($type, '[') !== false | \strpos($type, '<') !== false) {
             return $this->formatType(htmlspecialchars($output ?? $type));
         } else {
             $text = explode('\\', $type);
@@ -82,7 +85,7 @@ class DocView extends BaseView
     protected function formatValue($value, string $type = null)
     {
         if (!isset($type)) {
-            $type = gettype($value);
+            $type = \gettype($value);
         }
 
         if ($type === 'bool' || $type === 'boolean') {
@@ -107,7 +110,7 @@ class DocView extends BaseView
 
     protected function linkFunction(string $type, string $output = null) : string
     {
-        $text = explode('\\', $type);
+        $text = \explode('\\', $type);
 
         return '<a href="' . $this->base . '/' . $type . '.html">' . $this->formatVariable((isset($output) ? $output : end($text))) . '</a>';
     }
@@ -120,7 +123,7 @@ class DocView extends BaseView
     protected function getPercentage($value) : int
     {
         $min = !isset($this->coverage['complexity']) || $this->coverage['complexity'] < 1 ? -8 : $this->coverage['complexity'];
-        $out = (int) (100 / (1 + exp(-log($min / 50))));
+        $out = (int) (100 / (1 + \exp(-\log($min / 50))));
 
         return $out < 1 ? 1 : $out;
     }
