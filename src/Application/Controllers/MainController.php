@@ -6,8 +6,8 @@ use Documentor\src\Application\Views\BaseView;
 
 class MainController
 {
-    private $destination = '';
-    private $base        = '';
+    private string $destination = '';
+    private string $base        = '';
 
     public function __construct(string $destination, string $base)
     {
@@ -25,7 +25,7 @@ class MainController
         $mainView->setSection('Main');
         $mainView->setTitle('Main');
 
-        mkdir(dirname($mainView->getPath()), 0777, true);
-        file_put_contents($mainView->getPath(), $mainView->render());
+        \mkdir(dirname($mainView->getPath()), 0777, true);
+        \file_put_contents($mainView->getPath(), $mainView->render());
     }
 }
