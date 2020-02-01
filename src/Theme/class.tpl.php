@@ -1,4 +1,5 @@
-<?php include 'header.tpl.php'; ?>
+<?php declare(strict_types=1);
+include 'header.tpl.php'; ?>
 <h1><?= $this->ref->getShortName(); ?></h1>
 <p><?= $this->getComment()->getLicense(); ?></p>
 <h2>Description</h2>

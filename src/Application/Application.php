@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application;
 
@@ -33,36 +33,36 @@ class Application
         }
     }
 
-    private function setupHandlers()
+    private function setupHandlers(): void
     {
-        \set_exception_handler(function(\Throwable $e) { 
-            echo $e->getLine(), ': ' , $e->getMessage(); 
+        \set_exception_handler(function(\Throwable $e): void {
+            echo $e->getLine(), ': ' , $e->getMessage();
         });
 
-        \set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline) { 
+        \set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline): void {
             if (!(\error_reporting() & $errno)) {
                 echo $errline , ': ' , $errfile;
-            } 
+            }
         });
 
-        \register_shutdown_function(function() { 
-            $e = \error_get_last(); 
-            
+        \register_shutdown_function(function(): void {
+            $e = \error_get_last();
+
             if (isset($e)) {
-                echo $e['line'] , ': ' , $e['message']; 
+                echo $e['line'] , ': ' , $e['message'];
             }
         });
 
         \mb_internal_encoding('UTF-8');
     }
 
-    private function createDocumentation(string $source, string $destination, array $argv)
+    private function createDocumentation(string $source, string $destination, array $argv): void
     {
         $unitTest     = ($key = \array_search('-u', $argv)) === false || $key === \count($argv) - 1 ? null : \trim($argv[$key + 1], '" ');
         $codeCoverage = ($key = \array_search('-c', $argv)) === false || $key === \count($argv) - 1 ? null : \trim($argv[$key + 1], '" ');
         $guide        = ($key = \array_search('-g', $argv)) === false || $key === \count($argv) - 1 ? null : \trim($argv[$key + 1], '" ');
         $base         = ($key = \array_search('-b', $argv)) === false || $key === \count($argv) - 1 ? $destination : \trim($argv[$key + 1], '" ');
-        $base         = rtrim($base, '/\\');
+        $base         = \rtrim($base, '/\\');
         $sources      = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source));
 
         $this->mainController         = new MainController($destination, $base);
@@ -76,7 +76,7 @@ class Application
         $this->docController->createSearchSet();
     }
 
-    private function printUsage()
+    private function printUsage(): void
     {
         echo 'Usage: -s <SOURCE_PATH> -d <DESTINATION_PATH> -c <COVERAGE_PATH>' . "\n\n";
         echo "\t" . '-s Source path of the code to create the documentation from.' . "\n";
@@ -87,11 +87,11 @@ class Application
         echo "\t" . '-b Base uri for web access (e.g. http://www.yoururl.com).' . "\n";
     }
 
-    private function parse(\RecursiveIteratorIterator $sources)
+    private function parse(\RecursiveIteratorIterator $sources): void
     {
         foreach ($sources as $source) {
-            if ($source->isFile() 
-                && (($temp = \strlen($source->getPathname()) - strlen('.php')) >= 0 && \strpos($source->getPathname(), '.php', $temp) !== false)
+            if ($source->isFile()
+                && (($temp = \strlen($source->getPathname()) - \strlen('.php')) >= 0 && \strpos($source->getPathname(), '.php', $temp) !== false)
                 && (\stripos($source->getPathname(), '/test') === false && \stripos($source->getPathname(), '\\test') === false)
             ) {
                 $this->docController->parse($source);

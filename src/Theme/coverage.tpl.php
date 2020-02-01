@@ -1,4 +1,5 @@
-<?php include 'header.tpl.php'; ?>
+<?php declare(strict_types=1);
+include 'header.tpl.php'; ?>
 <h1>Coverage</h1>
 <table class="floatLeft">
 	<tbody>
@@ -28,7 +29,7 @@
 		<caption>Uncovered classes</caption>
 	<tbody>
 	<?php foreach ($this->uncoveredClasses as $class) : ?>
-		<tr><td><?= $class['uncovered']; ?><td><a href="<?= $this->base . '/' . str_replace('\\', '/', $class['class']) . '.html' ; ?>"><?= $class['class']; ?></a>
+		<tr><td><?= $class['uncovered']; ?><td><a href="<?= $this->base . '/' . \str_replace('\\', '/', $class['class']) . '.html'; ?>"><?= $class['class']; ?></a>
 	<?php endforeach; ?>
 </table>
 <table class="full">
@@ -36,7 +37,7 @@
 		<caption>CRAP classes</caption>
 	<tbody>
 	<?php foreach ($this->crapClasses as $class) : ?>
-		<tr><td><?= (int) $class['crap']; ?><td><a href="<?= $this->base . '/' . str_replace('\\', '/', $class['class']) . '.html' ; ?>"><?= $class['class']; ?></a>
+		<tr><td><?= (int) $class['crap']; ?><td><a href="<?= $this->base . '/' . \str_replace('\\', '/', $class['class']) . '.html'; ?>"><?= $class['class']; ?></a>
 	<?php endforeach; ?>
 </table>
 <table class="full">
@@ -44,7 +45,7 @@
 		<caption>CRAP methods</caption>
 	<tbody>
 	<?php foreach ($this->crapMethods as $method) : ?>
-		<tr><td><?= (int) $method['crap']; ?><td><a href="<?= $this->base . '/' . str_replace('\\', '/', $method['class']) . '-' . $method['method'] . '.html' ; ?>"><?= $method['class'] . '-' . $method['method']; ?></a>
+		<tr><td><?= (int) $method['crap']; ?><td><a href="<?= $this->base . '/' . \str_replace('\\', '/', $method['class']) . '-' . $method['method'] . '.html'; ?>"><?= $method['class'] . '-' . $method['method']; ?></a>
 	<?php endforeach; ?>
 </table>
 <div class="clear"></div>

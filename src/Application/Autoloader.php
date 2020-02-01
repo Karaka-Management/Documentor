@@ -1,12 +1,12 @@
-<?php
+<?php declare(strict_types=1);
 namespace Documentor\src\Application;
 
-spl_autoload_register('\Documentor\src\Application\Autoloader::defaultAutoloader');
+\spl_autoload_register('\Documentor\src\Application\Autoloader::defaultAutoloader');
 
 class Autoloader
 {
 
-    public static function defaultAutoloader(string $class)
+    public static function defaultAutoloader(string $class): void
     {
         if (($classNew = self::exists($class)) !== false) {
             /** @noinspection PhpIncludeInspection */
@@ -18,13 +18,13 @@ class Autoloader
 
     public static function exists(string $class)
     {
-        $class = ltrim($class, '\\');
-        $class = str_replace(['_', '\\'], DIRECTORY_SEPARATOR, $class);
+        $class = \ltrim($class, '\\');
+        $class = \str_replace(['_', '\\'], \DIRECTORY_SEPARATOR, $class);
 
-        if (file_exists(__DIR__ . '/../../../' . $class . '.php')) {
+        if (\file_exists(__DIR__ . '/../../../' . $class . '.php')) {
             return __DIR__ . '/../../../' . $class . '.php';
-        } elseif (file_exists(dirname(\Phar::running(false)) . '/../../../' . $class . '.php')) {
-            return dirname(\Phar::running(false)) . '/../../../' . $class . '.php';
+        } elseif (\file_exists(\dirname(\Phar::running(false)) . '/../../../' . $class . '.php')) {
+            return \dirname(\Phar::running(false)) . '/../../../' . $class . '.php';
         }
 
         return false;

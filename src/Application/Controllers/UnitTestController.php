@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Controllers;
 
@@ -8,7 +8,7 @@ class UnitTestController
 {
     private string $destination = '';
     private string $base        = '';
-    
+
     private array $test        = ['tests' => 0, 'assertions' => 0, 'failures' => 0, 'errors' => 0, 'empty' => 0, 'time' => 0];
     private array $testResults = ['errors' => [], 'failures' => []];
 
@@ -34,7 +34,7 @@ class UnitTestController
         return '';
     }
 
-    private function parse(string $path)
+    private function parse(string $path): void
     {
         $dom = new \DOMDocument();
         $dom->loadXML(\file_get_contents($path));
@@ -59,12 +59,12 @@ class UnitTestController
         $suites = $dom->getElementsByTagName('testsuite');
         foreach ($suites as $suite) {
             if ((int) $suite->getAttribute('assertions') === 0) {
-                $this->test['empty']++;
+                ++$this->test['empty'];
             }
         }
     }
 
-    private function createBaseFiles()
+    private function createBaseFiles(): void
     {
         $testView = new TestView();
         $testView->setTemplate('/Documentor/src/Theme/test');
@@ -74,8 +74,8 @@ class UnitTestController
         $testView->setSection('Test');
         $testView->setTest($this->test);
         $testView->setResults($this->testResults);
-        
-        \mkdir(dirname($testView->getPath()), 0777, true);
+
+        \mkdir(\dirname($testView->getPath()), 0777, true);
         \file_put_contents($testView->getPath(), $testView->render());
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Controllers;
 
@@ -13,10 +13,10 @@ class DocumentationController
     private string $destination = '';
     private string $base        = '';
     private string $sourcePath  = '';
-    
+
     private ?CodeCoverageController $codeCoverage = null;
-    private?UnitTestController $unitTest          = null;
-    
+    private ?UnitTestController $unitTest          = null;
+
     private array $files          = [];
     private array $loc            = [];
     private array $stats          = ['loc' => 0, 'classes' => 0, 'traits' => 0, 'interfaces' => 0, 'abstracts' => 0, 'methods' => 0];
@@ -33,7 +33,7 @@ class DocumentationController
         $this->createBaseFiles();
     }
 
-    public function parse(\SplFileInfo $file)
+    public function parse(\SplFileInfo $file): void
     {
         $classView = $this->parseClass($file->getPathname());
 
@@ -43,7 +43,7 @@ class DocumentationController
         }
     }
 
-    public function createSearchSet()
+    public function createSearchSet(): void
     {
         $js = 'var searchDataset = [];';
         foreach ($this->files as $file) {
@@ -54,7 +54,7 @@ class DocumentationController
         \file_put_contents($this->destination . '/js/searchDataset.js', $js);
     }
 
-    public function createTableOfContents()
+    public function createTableOfContents(): void
     {
         $tocView = new TableOfContentsView();
         $tocView->setPath($this->destination . '/documentation' . '.html');
@@ -64,8 +64,8 @@ class DocumentationController
         $tocView->setSection('Documentation');
         $tocView->setStats($this->stats);
         $tocView->setWithoutComment($this->withoutComment);
-        
-        \mkdir(dirname($tocView->getPath()), 0777, true);
+
+        \mkdir(\dirname($tocView->getPath()), 0777, true);
         \file_put_contents($tocView->getPath(), $tocView->render());
     }
 
@@ -94,33 +94,33 @@ class DocumentationController
             $classView->setSection('Documentation');
 
             if ($class->isInterface()) {
-                $this->stats['interfaces']++;
+                ++$this->stats['interfaces'];
             } elseif ($class->isTrait()) {
-                $this->stats['traits']++;
+                ++$this->stats['traits'];
             } elseif ($class->isAbstract()) {
-                $this->stats['abstracts']++;
+                ++$this->stats['abstracts'];
             } elseif ($class->isUserDefined()) {
-                $this->stats['classes']++;
+                ++$this->stats['classes'];
             }
 
             $classView->setReflection($class);
             $classView->setComment(new Comment($class->getDocComment()));
             $classView->setCoverage($this->codeCoverage->getClass($class->getName()) ?? []);
-            
+
             // Parse uses
             if ($class->getParentClass() !== false) {
                 $classView->addUse($class->inNamespace());
             }
-            
+
             $interfaces = $class->getInterfaces();
             foreach ($interfaces as $interface) {
                 $classView->addUse($interface->inNamespace());
             }
-            
+
             foreach ($this->loc as $line) {
                 $line = \trim($line);
-                
-                if (substr($line, 0, 4) === 'use ') {
+
+                if (\substr($line, 0, 4) === 'use ') {
                     $classView->addUse(\substr($line, 4, -1));
                 }
             }
@@ -140,7 +140,7 @@ class DocumentationController
         }
     }
 
-    private function parseMethod(\ReflectionMethod $method, string $destination, string $className)
+    private function parseMethod(\ReflectionMethod $method, string $destination, string $className): void
     {
         $methodView = new MethodView();
         $methodView->setTemplate('/Documentor/src/Theme/method');
@@ -149,7 +149,7 @@ class DocumentationController
         $docs = $method->getDocComment();
 
         try {
-            if (strpos($docs, '@inheritdoc') !== false) {
+            if (\strpos($docs, '@inheritdoc') !== false) {
                 $comment = new Comment($method->getPrototype()->getDocComment());
             } else {
                 $comment = new Comment($docs);
@@ -163,18 +163,18 @@ class DocumentationController
         $methodView->setCoverage($this->codeCoverage->getMethod($className, $method->getShortName()) ?? []);
         $methodView->setTitle($method->getDeclaringClass()->getShortName() . ' ~ ' . $method->getShortName());
         $methodView->setSection('Documentation');
-        $methodView->setCode(implode('', \array_slice($this->loc, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1)));
-        $this->stats['methods']++;
+        $methodView->setCode(\implode('', \array_slice($this->loc, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1)));
+        ++$this->stats['methods'];
 
         if ($comment->isEmpty()) {
             $this->withoutComment[] = $className . '-' . $method->getShortName();
         }
-        
+
         \mkdir(\dirname($methodView->getPath()), 0777, true);
         \file_put_contents($methodView->getPath(), $methodView->render());
     }
 
-    private function createBaseFiles()
+    private function createBaseFiles(): void
     {
         try {
             \mkdir($this->destination . '/css/', 0777, true);

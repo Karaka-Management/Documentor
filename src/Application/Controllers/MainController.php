@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Controllers;
 
@@ -16,7 +16,7 @@ class MainController
         $this->createBaseFiles();
     }
 
-    private function createBaseFiles()
+    private function createBaseFiles(): void
     {
         $mainView = new BaseView();
         $mainView->setTemplate('/Documentor/src/Theme/index');
@@ -25,7 +25,7 @@ class MainController
         $mainView->setSection('Main');
         $mainView->setTitle('Main');
 
-        \mkdir(dirname($mainView->getPath()), 0777, true);
+        \mkdir(\dirname($mainView->getPath()), 0777, true);
         \file_put_contents($mainView->getPath(), $mainView->render());
     }
 }

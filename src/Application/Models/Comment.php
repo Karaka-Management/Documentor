@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Models;
 
@@ -11,17 +11,17 @@ class Comment
     private ?string $package     = null;
     private ?string $since       = null;
     private ?string $deprecated  = null;
-    
+
     private array $todo  = [];
     private array $link  = [];
     private array $param = [];
-    
+
     private $throws = null;
     private $return = null;
-    
+
     private array $latex   = [];
     private array $example = [];
-    
+
     private bool $empty = true;
 
     public function __construct(string $comment)
@@ -31,7 +31,7 @@ class Comment
         $this->parse($comment);
     }
 
-    private function parse(string $comment)
+    private function parse(string $comment): void
     {
         $this->license    = $this->findKey('@license', $comment)[0] ?? null;
         $this->var        = $this->findKey('@var', $comment)[0] ?? null;
@@ -49,7 +49,7 @@ class Comment
         $this->throws      = $this->parseThrows($comment);
         $this->return      = $this->parseReturn($comment);
 
-        $this->empty = empty(trim($comment, '\\ *'));
+        $this->empty = empty(\trim($comment, '\\ *'));
     }
 
     private function findKey(string $key, string $comment) : array
@@ -80,7 +80,7 @@ class Comment
                 $matches[] = $match;
             }
 
-            $pos++;
+            ++$pos;
         }
 
         return $matches;
@@ -169,7 +169,7 @@ class Comment
     {
         return $this->license;
     }
-    
+
     public function getLinks() : array
     {
         return $this->link;

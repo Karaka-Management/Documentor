@@ -1,10 +1,11 @@
-<?php include 'header.tpl.php'; ?>
+<?php declare(strict_types=1);
+include 'header.tpl.php'; ?>
 <h1>Stats</h1>
 <table class="full">
 	<caption>General</caption>
 	<tbody>
 		<tr><td>Tests<td>Success<td>Errors<td>Failures<td>Empty<td>Time (s)
-		<tr><td><?= $this->test['tests']; ?><td><?= $this->test['assertions'] - $this->test['failures'] - $this->test['errors'] - $this->test['empty']; ?><td><?= $this->test['errors']; ?><td><?= $this->test['failures']; ?><td><?= $this->test['empty']; ?><td><?= round($this->test['time'], 2); ?>
+		<tr><td><?= $this->test['tests']; ?><td><?= $this->test['assertions'] - $this->test['failures'] - $this->test['errors'] - $this->test['empty']; ?><td><?= $this->test['errors']; ?><td><?= $this->test['failures']; ?><td><?= $this->test['empty']; ?><td><?= \round($this->test['time'], 2); ?>
 </table>
 <h1>Error</h1>
 <table class="full">

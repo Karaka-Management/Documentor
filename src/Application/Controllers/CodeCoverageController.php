@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Controllers;
 
@@ -8,9 +8,9 @@ class CodeCoverageController
 {
     private string $destination = '';
     private string $base        = '';
-    
+
     private array $coverage = [];
-    
+
     private int $totalCrap       = 0;
     private int $totalComplexity = 0;
 
@@ -36,7 +36,7 @@ class CodeCoverageController
         return $this->coverage[$class]['function'][$name] ?? null;
     }
 
-    private function parse(string $path)
+    private function parse(string $path): void
     {
         $dom = new \DOMDocument();
         $dom->loadXML(\file_get_contents($path));
@@ -198,14 +198,14 @@ class CodeCoverageController
         return $crap;
     }
 
-    private function createBaseFiles()
+    private function createBaseFiles(): void
     {
         $coverageView = new CoverageView();
         $coverageView->setTemplate('/Documentor/src/Theme/coverage');
         $coverageView->setBase($this->base);
         $coverageView->setPath($this->destination . '/coverage' . '.html');
         $coverageView->setTitle('Coverage');
-        $coverageView->setClasses(count($this->coverage));
+        $coverageView->setClasses(\count($this->coverage));
         $coverageView->setCoveredClasses($this->countCoveredClasses());
         $coverageView->setMethods($this->countMethods());
         $coverageView->setCoveredMethods($this->countCoveredMethods());
@@ -216,7 +216,7 @@ class CodeCoverageController
         $coverageView->setTopCrapClasses($this->getTopCrapClasses(15));
         $coverageView->setComplexity($this->totalComplexity);
         $coverageView->setCrap($this->totalCrap);
-        
+
         \mkdir(\dirname($coverageView->getPath()), 0777, true);
         \file_put_contents($coverageView->getPath(), $coverageView->render());
     }

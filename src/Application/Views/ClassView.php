@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Views;
 
@@ -8,17 +8,17 @@ use Reflection;
 class ClassView extends DocView
 {
     private array $uses = [];
-    
-    public function addUse(string $use)
+
+    public function addUse(string $use): void
     {
         $this->uses[] = $use;
     }
-    
+
     public function getUses() : array
     {
         return \array_unique($this->uses);
     }
-    
+
     public function getTop() : string
     {
         $abstract = $this->ref->isAbstract() ? 'abstract ' : '';
@@ -36,7 +36,7 @@ class ClassView extends DocView
 
         $implements = $implements !== '' ? 'implements ' . \rtrim($implements, ', ') : '';
 
-        return trim($this->formatClassType($abstract . $type) . $this->formatClassName($name) . $extends . $implements);
+        return \trim($this->formatClassType($abstract . $type) . $this->formatClassName($name) . $extends . $implements);
     }
 
     public function getMembers()
@@ -44,7 +44,7 @@ class ClassView extends DocView
         $members = $this->ref->getProperties();
         foreach ($members as $member) {
             $type = new Comment($member->getDocComment());
-            yield '    ' . $this->formatModifier(implode(' ', \Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable('$' . $member->getName()) . ';';
+            yield '    ' . $this->formatModifier(\implode(' ', \Reflection::getModifierNames($member->getModifiers()))) . ' ' . $this->linkType($type->getVar()) . ' ' . $this->formatVariable('$' . $member->getName()) . ';';
         }
     }
 

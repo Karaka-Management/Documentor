@@ -1,4 +1,5 @@
-<?php include 'head.tpl.php'; ?>
+<?php declare(strict_types=1);
+include 'head.tpl.php'; ?>
 <div class="grad grad-main"></div>
 <div id="header-top" class="cont">
     <div id="logo">

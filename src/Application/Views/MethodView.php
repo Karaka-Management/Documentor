@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Views;
 
@@ -21,9 +21,9 @@ class MethodView extends DocView
                 . ', ';
         }
 
-        $methodString = $this->formatModifier(implode(' ', Reflection::getModifierNames($method->getModifiers())))
+        $methodString = $this->formatModifier(\implode(' ', Reflection::getModifierNames($method->getModifiers())))
             . ' ' . $this->formatFunction() . ' ' . $method->getShortName()
-            . '(' . trim($parameterString, ', ') . ')'
+            . '(' . \trim($parameterString, ', ') . ')'
             . ($method->hasReturnType() ? ' : ' . $this->linkType($method->getReturnType()) : '');
 
         return $methodString;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Views;
 
@@ -7,11 +7,11 @@ use Documentor\src\Application\Models\Comment;
 class DocView extends BaseView
 {
     protected $ref = null;
-    
+
     protected ?Comment $comment = null;
-    
+
     protected array $coverage = [];
-    
+
     protected string $code = '';
 
     public function __construct()
@@ -19,7 +19,7 @@ class DocView extends BaseView
         $this->comment = new Comment('');
     }
 
-    public function setReflection($ref)
+    public function setReflection($ref): void
     {
         $this->ref = $ref;
     }
@@ -29,24 +29,24 @@ class DocView extends BaseView
         return $this->comment;
     }
 
-    public function setComment(Comment $comment)
+    public function setComment(Comment $comment): void
     {
         $this->comment = $comment;
     }
 
-    public function setCode(string $code)
+    public function setCode(string $code): void
     {
-        $trim  = \strlen($code) - \strlen(ltrim($code, ' '));
+        $trim  = \strlen($code) - \strlen(\ltrim($code, ' '));
         $lines = \explode("\n", $code);
 
         foreach ($lines as $key => $line) {
             $lines[$key] = \substr($line, $trim);
         }
 
-        $this->code = implode("\n", $lines);
+        $this->code = \implode("\n", $lines);
     }
 
-    public function setCoverage(array $coverage)
+    public function setCoverage(array $coverage): void
     {
         $this->coverage = $coverage;
     }
@@ -74,11 +74,11 @@ class DocView extends BaseView
         } elseif ($type === 'string' || $type === 'int' || $type === 'float' || $type === 'bool' || $type === 'array') {
             return $this->formatType($type);
         } elseif (\strpos($type, '&') !== false || \strpos($type, '[') !== false | \strpos($type, '<') !== false) {
-            return $this->formatType(htmlspecialchars($output ?? $type));
+            return $this->formatType(\htmlspecialchars($output ?? $type));
         } else {
-            $text = explode('\\', $type);
+            $text = \explode('\\', $type);
 
-            return '<a href="' . $this->base . '/' . $type . '.html">' . $this->formatType((isset($output) ? $output : end($text))) . '</a>';
+            return '<a href="' . $this->base . '/' . $type . '.html">' . $this->formatType((isset($output) ? $output : \end($text))) . '</a>';
         }
     }
 
@@ -112,7 +112,7 @@ class DocView extends BaseView
     {
         $text = \explode('\\', $type);
 
-        return '<a href="' . $this->base . '/' . $type . '.html">' . $this->formatVariable((isset($output) ? $output : end($text))) . '</a>';
+        return '<a href="' . $this->base . '/' . $type . '.html">' . $this->formatVariable((isset($output) ? $output : \end($text))) . '</a>';
     }
 
     protected function formatVariable(string $var) : string

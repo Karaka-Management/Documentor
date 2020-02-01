@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Documentor\src\Application\Controllers;
 
@@ -8,7 +8,7 @@ class GuideController
 {
     private string $destination = '';
     private string $base        = '';
-    
+
     private array $nav = [];
 
     public function __construct(string $destination, string $base, string $path = null)
@@ -37,7 +37,7 @@ class GuideController
         return $nav;
     }
 
-    private function parse(\RecursiveIteratorIterator $dirs, string $base)
+    private function parse(\RecursiveIteratorIterator $dirs, string $base): void
     {
         foreach ($dirs as $file) {
             if ($file->isDir()) {
@@ -47,17 +47,17 @@ class GuideController
                     $guideView = new GuideView();
                     $guideView->setTemplate('/Documentor/src/Theme/guide');
                     $guideView->setBase($this->base);
-                    $guideView->setPath($this->destination . '/guide/' . \substr($file->getPath(), strlen($base)) . '/' . $file->getFilename() . '.html');
+                    $guideView->setPath($this->destination . '/guide/' . \substr($file->getPath(), \strlen($base)) . '/' . $file->getFilename() . '.html');
                     $guideView->setSection('Guide');
                     $guideView->setTitle('Guide');
                     $guideView->setNavigation($this->nav);
-                    $guideView->setContent(file_get_contents($file->getPathname()));
+                    $guideView->setContent(\file_get_contents($file->getPathname()));
 
-                    \mkdir(dirname($guideView->getPath()), 0777, true);
+                    \mkdir(\dirname($guideView->getPath()), 0777, true);
                     \file_put_contents($guideView->getPath(), $guideView->render());
                 } else {
                     \mkdir($this->destination . '/guide/' . \substr($file->getPath(), \strlen($base)) . '/', 0777, true);
-                    \copy($file->Pathname(), $this->destination . '/guide/' . substr($file->getPath(), \strlen($base)) . '/' . $file->getFilename());
+                    \copy($file->Pathname(), $this->destination . '/guide/' . \substr($file->getPath(), \strlen($base)) . '/' . $file->getFilename());
                 }
             }
         }
