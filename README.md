@@ -1,5 +1,7 @@
 # What is the documentor
 
+> Discontinued due to the quick changes in the php language and low demand.
+
 This documentation generator creates a html documentation for php classes based on the comments provided for classes, interfaces, traits, methods, variables etc. The generated output is html, css and js and can be styled with custom themes as desired.
 
 ## Requirements
